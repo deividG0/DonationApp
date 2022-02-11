@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
+        <item name="colorPrimary">@color/green1</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="ThemeOverlay_MaterialComponents_MaterialAlertDialog_FullWidthButtons" parent="">
+        <item name="colorPrimary">@color/green1</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="Button.DarkGreen" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@color/green2</item>
+    </style>
+
+</resources>

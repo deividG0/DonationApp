@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">DonationApp</string>
+    <string name="enterEmail">Digite seu email</string>
+    <string name="noaccount">Não tem um conta? Crie aqui.</string>
+    <string name="enterPassword">Digite sua senha</string>
+    <string name="register">Cadastrar</string>
+    <string name="enterName">Digite seu nome</string>
+    <string name="enter">Entrar</string>
+    <string name="home">Home</string>
+    <string name="agenda">Agenda</string>
+    <string name="map">Mapa</string>
+    <string name="profile">Perfil</string>
+    <string name="logout">Sair</string>
+    <string name="errorLoginMessage">Erro ao tentar fazer log-in, verifique seu email e senha.</string>
+    <string name="tryAgain">Tentar novamente</string>
+    <string name="institution">Instituição</string>
+    <string name="establishment">Estabelecimento</string>
+    <string name="enterAssociationName">Insira o nome da associação</string>
+    <string name="selectionDescription">Para prosseguir com a criação de conta você precisa se associar a um estabelecimento ou instituição.</string>
+    <string name="proceed">Prosseguir</string>
+    <string name="noassociation">Registre sua instituição ou estabelecimento clicando aqui.</string>
+    <string name="registerInstitution">Registrar instituição</string>
+    <string name="registerEstablishment">Registrar estabelecimento</string>
+    <string name="enterInstitutionName">Digite o nome da instituição</string>
+    <string name="enterInstitutionAddress">Digite o endereço da instituição</string>
+    <string name="enterInstitutionPhone">Digite o telefone da instituição</string>
+    <string name="enterInstitutionType">Digite o tipo da instituição</string>
+    <string name="enterEstablishmentName">Digite o nome do estabelecimento</string>
+    <string name="enterEstablishmentAddress">Digite o endereço do estabelecimento</string>
+    <string name="enterEstablishmentPhone">Digite o telefone do estabelecimento</string>
+    <string name="confirmationAlertSelection">A sua conta será associada a %1$s, está correto ?</string>
+    <string name="cancel">Cancelar</string>
+    <string name="confirm">Confirmar</string>
+    <string name="fab_home_desc">Adicionar</string>
+    <string name="accessProfile">Acessar perfil</string>
+    <string name="sendMessage">Enviar mensagem</string>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/home"
+        android:enabled="true"
+        app:showAsAction="withText"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home"
+        />
+
+    <item
+        android:id="@+id/agenda"
+        android:enabled="true"
+        app:showAsAction="withText"
+        android:icon="@drawable/ic_agenda"
+        android:title="@string/agenda"/>
+
+    <item
+        android:id="@+id/map"
+        android:enabled="true"
+        app:showAsAction="withText"
+        android:icon="@drawable/ic_map"
+        android:title="@string/map"/>
+
+    <item
+        android:id="@+id/profile"
+        android:enabled="true"
+        app:showAsAction="withText"
+        android:icon="@drawable/ic_person"
+        android:title="@string/profile"/>
+
+</menu>
