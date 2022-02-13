@@ -34,4 +34,6 @@
     <string name="fab_home_desc">Adicionar</string>
     <string name="accessProfile">Acessar perfil</string>
     <string name="sendMessage">Enviar mensagem</string>
+    <string name="enterCardDescription">Digite a descrição do seu requerimento</string>
+    <string name="createPost">Criar postagem</string>
 </resources>

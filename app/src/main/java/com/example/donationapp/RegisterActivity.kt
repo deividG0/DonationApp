@@ -67,6 +67,8 @@ class RegisterActivity : AppCompatActivity() {
         val email = editTextEmail.editText?.text.toString()
         val password = editTextPassword.editText?.text.toString()
 
+        var registered = false
+
         Toast.makeText(this,"name: $name, email: $email, password: $password, password length: ${password.length}",Toast.LENGTH_LONG).show()
 
         if (email.isEmpty() || name.isEmpty() || password.isEmpty()) {
@@ -94,6 +96,25 @@ class RegisterActivity : AppCompatActivity() {
             return
         }else{
             editTextPassword.error = null
+        }
+
+        FirebaseFirestore.getInstance().collection("/users")
+            .get()
+            .addOnSuccessListener {
+                for (doc in it){
+                    if (doc.toObject(User::class.java).email == email){
+
+                        editTextEmail.error = "Este email já está registrado."
+                        registered = true
+                        break
+
+                    }
+                }
+            }
+        if (registered){
+
+            return
+
         }
 
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
@@ -126,7 +147,7 @@ class RegisterActivity : AppCompatActivity() {
         val name = editTextName.editText?.text.toString()
         val email = editTextEmail.editText?.text.toString()
 
-        val user = User(id, name, email)
+        val user = User(id, name, email,null)
 
         FirebaseFirestore.getInstance().collection("users")
             .document(id.toString())

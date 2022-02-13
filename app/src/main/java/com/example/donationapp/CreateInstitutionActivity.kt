@@ -116,12 +116,9 @@ class CreateInstitutionActivity : AppCompatActivity() {
 
         val userId = FirebaseAuth.getInstance().uid
 
-        val associationRef = FirebaseFirestore.getInstance().collection("institution")
-            .document(institutionId)
-
         FirebaseFirestore.getInstance().collection("users")
             .document(userId!!)
-            .update("association", associationRef)
+            .update("associationId", institutionId)
 
     }
 }
