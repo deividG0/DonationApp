@@ -87,12 +87,9 @@ class SelectionActivity : AppCompatActivity() {
 
                 val userId = FirebaseAuth.getInstance().uid
 
-                val associationRef = FirebaseFirestore.getInstance().collection("institution")
-                    .document(inst.id)
-
                 FirebaseFirestore.getInstance().collection("users")
                     .document(userId!!)
-                    .update("association",associationRef)
+                    .update("associationId",inst.id)
 
             }
         }
@@ -101,12 +98,9 @@ class SelectionActivity : AppCompatActivity() {
 
                 val userId = FirebaseAuth.getInstance().uid
 
-                val associationRef = FirebaseFirestore.getInstance().collection("establishment")
-                    .document(est.id)
-
                 FirebaseFirestore.getInstance().collection("users")
                     .document(userId!!)
-                    .update("association",associationRef)
+                    .update("associationId",est.id)
 
             }
         }

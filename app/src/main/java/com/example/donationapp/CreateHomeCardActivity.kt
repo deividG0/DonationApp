@@ -35,12 +35,8 @@ class CreateHomeCardActivity : AppCompatActivity() {
 
     private fun createCard() {
 
-        val editTextCardDescription = findViewById<TextInputLayout>(R.id.editTextCardDescription)
         val currentUserId = FirebaseAuth.getInstance().uid
-        var institutionId : String? = null
-        var institutionPhotoUrl : String? = null
-        var institutionName : String? = null
-        val cardDescription : String = editTextCardDescription.editText?.text.toString()
+        var institutionId : String?
 
         FirebaseFirestore.getInstance().collection("/users")
             .document(currentUserId!!)
@@ -50,6 +46,7 @@ class CreateHomeCardActivity : AppCompatActivity() {
                 institutionId = it.toObject(User::class.java)?.associationId
                 Log.i("Test","criação de card inst id: $institutionId")
                 Log.i("Test","criação de card inst id 2: ${it.toObject(User::class.java)?.associationId}")
+                getAssociationData(institutionId)
 
             }
             .addOnFailureListener {
@@ -57,6 +54,12 @@ class CreateHomeCardActivity : AppCompatActivity() {
                 Log.e("Test",it.message, it)
 
             }
+    }
+
+    private fun getAssociationData(institutionId : String?){
+
+        var institutionPhotoUrl : String?
+        var institutionName : String?
 
         FirebaseFirestore.getInstance().collection("/institution")
             .document(institutionId!!)
@@ -65,17 +68,25 @@ class CreateHomeCardActivity : AppCompatActivity() {
 
                 institutionPhotoUrl = it.toObject(Institution::class.java)?.photoUrl
                 institutionName = it.toObject(Institution::class.java)?.name
+                setCard(institutionPhotoUrl,institutionName,institutionId)
 
             }
+    }
 
-        val card = HomeCardView(institutionPhotoUrl,institutionName,cardDescription)
+    private fun setCard(institutionPhotoUrl: String?, institutionName: String?, institutionId: String?) {
 
-        FirebaseFirestore.getInstance().collection("/institution")
-            .document(institutionId!!)
-            .collection("/requirements")
+        val editTextCardDescription = findViewById<TextInputLayout>(R.id.editTextCardDescription)
+        val cardDescription : String = editTextCardDescription.editText?.text.toString()
+        val timestamp : Long = System.currentTimeMillis()
+        val card = HomeCardView(institutionId,institutionPhotoUrl,institutionName,cardDescription,timestamp)
+
+        FirebaseFirestore.getInstance().collection("/requirements")
             .add(card)
             .addOnSuccessListener {
 
+                val intent = Intent(this,TopActivity::class.java)
+                progressBar.visibility = View.INVISIBLE
+                startActivity(intent)
                 Log.i("Test","Card created!")
 
             }.addOnFailureListener {
@@ -83,10 +94,5 @@ class CreateHomeCardActivity : AppCompatActivity() {
                 Log.i("Test","Card creation failed")
 
             }
-
-        val intent = Intent(this,TopActivity::class.java)
-        progressBar.visibility = View.INVISIBLE
-        startActivity(intent)
-
     }
 }

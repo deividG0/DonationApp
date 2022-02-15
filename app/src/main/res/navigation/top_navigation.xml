@@ -9,24 +9,24 @@
         android:id="@+id/home"
         android:name="com.example.donationapp.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home"/>
 
     <fragment
         android:id="@+id/agenda"
         android:name="com.example.donationapp.AgendaFragment"
         android:label="fragment_agenda"
-        tools:layout="@layout/fragment_agenda" />
+        tools:layout="@layout/fragment_agenda"/>
 
     <fragment
         android:id="@+id/map"
         android:name="com.example.donationapp.MapFragment"
         android:label="fragment_map"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map"/>
 
     <fragment
         android:id="@+id/profile"
         android:name="com.example.donationapp.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile"/>
 
 </navigation>

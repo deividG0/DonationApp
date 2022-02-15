@@ -4,12 +4,15 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.util.LogPrinter
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -17,9 +20,20 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class TopActivity : AppCompatActivity() {
 
+    private lateinit var progressBar: ProgressBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_top)
+
+        progressBar = findViewById(R.id.progressBarTop)
+        progressBar.visibility = View.VISIBLE
+
+        //Inicializando menu inferior e configurando-o com a navegação entre os fragmentos
+
+        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        val navController = findNavController(R.id.fragmentContainerView)
+        bottomNavigation.setupWithNavController(navController)
 
         /*
 
@@ -32,17 +46,10 @@ class TopActivity : AppCompatActivity() {
 
          */
 
-        //Inicializando menu inferior e configurando-o com a navegação entre os fragmentos
-
-        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
-        val navController = findNavController(R.id.fragmentContainerView)
-        bottomNavigation.setupWithNavController(navController)
-
         Toast.makeText(this, "USER ID: ${FirebaseAuth.getInstance().uid}", Toast.LENGTH_SHORT)
             .show()
 
         verifyAuthentication()
-        getAssociationType()
 
     }
 
@@ -74,13 +81,15 @@ class TopActivity : AppCompatActivity() {
 
                     startActivity(intent)
 
+                }else{
+                    progressBar.visibility = View.INVISIBLE
+
                 }
 
             }
             .addOnFailureListener { exception ->
                 Log.d("Test", "Erro", exception)
             }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -120,93 +129,5 @@ class TopActivity : AppCompatActivity() {
             verifyFirstLogin()
 
         }
-    }
-
-    private fun getAssociationType(){
-
-        val associationId = getAssociationId()
-        Log.i("Test", "ASSOCIATION ID in function ------------------> $associationId")
-        var type: String = ""
-
-        if (getListInstitutionsId().contains(associationId)) {
-
-            Log.i("Test", "institution        ------------")
-            type = "institution"
-            Toast.makeText(this, "ASSOCIATION TYPE ----> ${type}", Toast.LENGTH_SHORT)
-                .show()
-
-        } else if (getListEstablishmentsId().contains(associationId)) {
-
-            Log.i("Test", "establishment        ------------")
-            type = "establishment"
-            Toast.makeText(this, "ASSOCIATION TYPE ----> ${type}", Toast.LENGTH_SHORT)
-                .show()
-
-        }
-
-    }
-
-    private fun getAssociationId(): String {
-
-        var associationId: String = ""
-
-        FirebaseFirestore.getInstance().collection("/users")
-            .document(FirebaseAuth.getInstance().uid!!)
-            .get()
-            .addOnSuccessListener {
-
-                associationId = it.toObject(User::class.java)?.associationId!!
-                Log.i("Test", "ASSOCIATION ID ------------------> $associationId")
-
-            }
-            .addOnFailureListener {
-
-                Log.e("Test", it.message, it)
-
-            }
-
-        return associationId
-    }
-
-    private fun getListInstitutionsId(): MutableList<String> {
-
-        val institutionIdList: MutableList<String> = mutableListOf()
-
-        FirebaseFirestore.getInstance().collection("/institution")
-            .get()
-            .addOnSuccessListener {
-                for (doc in it) {
-                    Log.i("Test", "ENTROU INSTITUIÇÃO ${doc.id}")
-                    institutionIdList.add(doc.id)
-                }
-            }.addOnFailureListener {
-
-                Log.i("Test", "Não foi possível recuperar todas as instituições do banco de dados")
-
-            }
-
-        return institutionIdList
-
-    }
-
-    private fun getListEstablishmentsId(): MutableList<String> {
-
-        val establishmentIdList: MutableList<String> = mutableListOf()
-
-        FirebaseFirestore.getInstance().collection("/establishment")
-            .get()
-            .addOnSuccessListener {
-                for (doc in it) {
-                    Log.i("Test", "ENTROU ESTABLISHMENT ${doc.id}")
-                    establishmentIdList.add(doc.id)
-                }
-            }.addOnFailureListener {
-
-                Log.i("Test", "Não foi possível recuperar todas as instituições do banco de dados")
-
-            }
-
-        return establishmentIdList
-
     }
 }
