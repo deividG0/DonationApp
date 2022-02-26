@@ -9,10 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.findNavController
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -27,7 +24,7 @@ class TopActivity : AppCompatActivity() {
         setContentView(R.layout.activity_top)
 
         progressBar = findViewById(R.id.progressBarTop)
-        progressBar.visibility = View.VISIBLE
+        progressBar.visibility = View.INVISIBLE
 
         //Inicializando menu inferior e configurando-o com a navegação entre os fragmentos
 
@@ -53,7 +50,8 @@ class TopActivity : AppCompatActivity() {
 
     }
 
-    private fun verifyFirstLogin() {
+
+    /*private fun verifyFirstLogin() {
 
         val idCurrentUser = FirebaseAuth.getInstance().uid.toString()
 
@@ -90,7 +88,7 @@ class TopActivity : AppCompatActivity() {
             .addOnFailureListener { exception ->
                 Log.d("Test", "Erro", exception)
             }
-    }
+    }*/
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
@@ -124,10 +122,51 @@ class TopActivity : AppCompatActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
 
-        } else {
+        }else{
 
-            verifyFirstLogin()
+            verifyUserAccountType()
 
         }
+    }
+
+    private fun verifyUserAccountType(){
+
+        val currentUserId = FirebaseAuth.getInstance().uid!!
+
+        FirebaseFirestore.getInstance().collection("establishment")
+            .get()
+            .addOnSuccessListener {
+                for (doc in it){
+                    if(doc.toObject(Establishment::class.java).id == currentUserId){
+
+                        UniversalCommunication.userType = "establishment"
+
+                    }
+                }
+            }
+
+        FirebaseFirestore.getInstance().collection("institution")
+            .get()
+            .addOnSuccessListener {
+                for (doc in it){
+                    if(doc.toObject(Establishment::class.java).id == currentUserId){
+
+                        UniversalCommunication.userType = "institution"
+
+                    }
+                }
+            }
+
+        FirebaseFirestore.getInstance().collection("person")
+            .get()
+            .addOnSuccessListener {
+                for (doc in it){
+                    if(doc.toObject(Establishment::class.java).id == currentUserId){
+
+                        UniversalCommunication.userType = "person"
+
+                    }
+                }
+            }
     }
 }

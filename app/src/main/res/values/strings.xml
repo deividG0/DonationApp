@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">DonationApp</string>
-    <string name="enterEmail">Digite seu email</string>
+    <string name="enterEmail">Email</string>
     <string name="noaccount">Não tem um conta? Crie aqui.</string>
-    <string name="enterPassword">Digite sua senha</string>
+    <string name="enterPassword">Senha</string>
     <string name="register">Cadastrar</string>
-    <string name="enterName">Digite seu nome</string>
+    <string name="enterName">Nome</string>
     <string name="enter">Entrar</string>
     <string name="home">Home</string>
     <string name="agenda">Agenda</string>
@@ -34,6 +34,18 @@
     <string name="fab_home_desc">Adicionar</string>
     <string name="accessProfile">Acessar perfil</string>
     <string name="sendMessage">Enviar mensagem</string>
-    <string name="enterCardDescription">Digite a descrição do seu requerimento</string>
+    <string name="enterCardDescription">Digite a descrição da sua oferta</string>
     <string name="createPost">Criar postagem</string>
+    <string name="enterAccountType">Tipo de conta</string>
+    <string name="enterPhone">Telefone</string>
+    <string name="send">Enviar</string>
+    <string name="photo">Insira sua foto aqui</string>
+    <string name="conversations">Conversas</string>
+    <string name="solicitations">Solicitações</string>
+    <string name="description">Descrição:</string>
+    <string name="address">Endereço:</string>
+    <string name="phone">Telefone:</string>
+    <string name="editHere"><u>Edite aqui</u></string>
+    <string name="request">Solicitar</string>
+    <string name="selectDate">Selecione a data</string>
 </resources>

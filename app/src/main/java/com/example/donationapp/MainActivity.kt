@@ -47,14 +47,6 @@ class MainActivity : AppCompatActivity() {
         buttonEnter = findViewById(R.id.buttonEnter)
         buttonEnter.setOnClickListener {
 
-            //Fazendo barra de login ficar visível
-            progressBar.visibility = View.VISIBLE
-
-            //Impossibilitando toque na tela pelo usuário
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-
             signIn()
 
         }
@@ -76,6 +68,29 @@ class MainActivity : AppCompatActivity() {
 
         val email: String = editTextEmailLogin.editText?.text.toString()
         val password: String = editTextPasswordLogin.editText?.text.toString()
+
+        if (email.isEmpty() || password.isEmpty()) {
+
+            if (email.isEmpty()) {
+                editTextEmailLogin.error = "Este campo está em branco."
+            }else{
+                editTextEmailLogin.error = null
+            }
+            if (password.isEmpty()) {
+                editTextPasswordLogin.error = "Este campo está em branco."
+            }else{
+                editTextPasswordLogin.error = null
+            }
+            return
+        }
+
+        //Fazendo barra de login ficar visível
+        progressBar.visibility = View.VISIBLE
+
+        //Impossibilitando toque na tela pelo usuário
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password)
             .addOnCompleteListener {

@@ -28,59 +28,35 @@ class CreateHomeCardActivity : AppCompatActivity() {
         buttonCreateHomeCard.setOnClickListener {
 
             progressBar.visibility = View.VISIBLE
-            createCard()
+            getCurrentUserData()
 
         }
     }
 
-    private fun createCard() {
+    private fun getCurrentUserData(){
 
-        val currentUserId = FirebaseAuth.getInstance().uid
-        var institutionId : String?
+        val currentUserId = FirebaseAuth.getInstance().uid!!
 
-        FirebaseFirestore.getInstance().collection("/users")
-            .document(currentUserId!!)
+        FirebaseFirestore.getInstance().collection("establishment")
+            .document(currentUserId)
             .get()
             .addOnSuccessListener {
 
-                institutionId = it.toObject(User::class.java)?.associationId
-                Log.i("Test","criação de card inst id: $institutionId")
-                Log.i("Test","criação de card inst id 2: ${it.toObject(User::class.java)?.associationId}")
-                getAssociationData(institutionId)
-
-            }
-            .addOnFailureListener {
-
-                Log.e("Test",it.message, it)
+                var establishmentPhotoUrl = it.toObject(Establishment::class.java)?.photoUrl
+                var establishmentName = it.toObject(Establishment::class.java)?.name
+                setCard(establishmentPhotoUrl,establishmentName,currentUserId)
 
             }
     }
 
-    private fun getAssociationData(institutionId : String?){
-
-        var institutionPhotoUrl : String?
-        var institutionName : String?
-
-        FirebaseFirestore.getInstance().collection("/institution")
-            .document(institutionId!!)
-            .get()
-            .addOnSuccessListener {
-
-                institutionPhotoUrl = it.toObject(Institution::class.java)?.photoUrl
-                institutionName = it.toObject(Institution::class.java)?.name
-                setCard(institutionPhotoUrl,institutionName,institutionId)
-
-            }
-    }
-
-    private fun setCard(institutionPhotoUrl: String?, institutionName: String?, institutionId: String?) {
+    private fun setCard(establishmentPhotoUrl: String?, establishmentName: String?, establishmentId: String?) {
 
         val editTextCardDescription = findViewById<TextInputLayout>(R.id.editTextCardDescription)
         val cardDescription : String = editTextCardDescription.editText?.text.toString()
         val timestamp : Long = System.currentTimeMillis()
-        val card = HomeCardView(institutionId,institutionPhotoUrl,institutionName,cardDescription,timestamp)
+        val card = HomeCardView(establishmentId,establishmentPhotoUrl,establishmentName,cardDescription,timestamp)
 
-        FirebaseFirestore.getInstance().collection("/requirements")
+        FirebaseFirestore.getInstance().collection("/offer")
             .add(card)
             .addOnSuccessListener {
 

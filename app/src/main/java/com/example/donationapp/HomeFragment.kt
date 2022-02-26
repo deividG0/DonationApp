@@ -7,16 +7,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.donationapp.databinding.FragmentHomeBinding
+import com.google.android.gms.tasks.Tasks.await
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import kotlinx.coroutines.awaitAll
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var listCards : MutableList<HomeCardView>
+    private lateinit var listCards: MutableList<HomeCardView>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,33 +31,12 @@ class HomeFragment : Fragment() {
 
         binding.progressBarHomeFragment.visibility = View.VISIBLE
 
-        val defaultPhotoUrl =
-            "https://firebasestorage.googleapis.com/v0/b/donationapp-47a1d.appspot.com/o/default-group-icon.png?alt=media&token=9599ca53-56b1-49c0-81c0-f0ac4639a60c"
-        val defaultDescriptionCard =
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi mi turpis, commodo a accumsan lacinia, tincidunt vel mauris. Sed vehicula hendrerit augue, nec laoreet ligula lacinia porta. Maecenas vehicula tellus vitae mauris luctus vulputate. Sed sit amet interdum sapien. Donec molestie odio in hendrerit faucibus. Curabitur venenatis tempus lorem ut consequat. Nulla sed condimentum massa. Praesent rhoncus odio sit amet urna elementum, quis consequat massa pellentesque. Nam id lacinia ipsum, in pulvinar diam."
-
-        val exampleCardList: MutableList<HomeCardView> = mutableListOf()
-        exampleCardList.add(HomeCardView("1",defaultPhotoUrl, "Title one",defaultDescriptionCard))
-        exampleCardList.add(HomeCardView("2",defaultPhotoUrl, "Title two",defaultDescriptionCard))
-        exampleCardList.add(HomeCardView("3",defaultPhotoUrl, "Title three",defaultDescriptionCard))
-        exampleCardList.add(HomeCardView("4",defaultPhotoUrl, "Title four",defaultDescriptionCard))
-
         binding.rvHome.setHasFixedSize(true)
         binding.rvHome.layoutManager = LinearLayoutManager(context)
-        //binding.rvHome.adapter = HomeAdapter(exampleCardList)
 
-        getAssociationType()
-        fetchCards()
+        verifyAssociationType()
 
-        /*
-        binding.rvHome.adapter = homeAdapter
-        binding.rvHome.layoutManager = LinearLayoutManager(context)
-        binding.rvHome.setHasFixedSize(true)
-        */
-
-        if(arguments!=null) {
-            Log.i("Test", "------->   ${arguments?.getString("message")}")
-        }
+        binding.floatingActionButton.hide()
 
         binding.floatingActionButton.setOnClickListener {
 
@@ -65,83 +47,220 @@ class HomeFragment : Fragment() {
         return binding.root
 
     }
-    private fun getAssociationType() {
 
-        FirebaseFirestore.getInstance().collection("/users")
-            .document(FirebaseAuth.getInstance().uid!!)
+    private fun verifyAssociationType() {
+
+        val currentUserId = FirebaseAuth.getInstance().uid
+
+        FirebaseFirestore.getInstance().collection("institution")
             .get()
             .addOnSuccessListener {
+                if (it.isEmpty) {
 
-                verifyAssociationType(it.toObject(User::class.java)?.associationId!!)
-
-            }
-            .addOnFailureListener {
-
-                Log.e("Test", it.message, it)
-
-            }
-    }
-
-    private fun verifyAssociationType(associationId : String) {
-
-        val institutionIdList: MutableList<String> = mutableListOf()
-
-        FirebaseFirestore.getInstance().collection("/institution")
-            .get()
-            .addOnSuccessListener {
-                for (doc in it) {
-                    Log.i("Test", "ENTROU INSTITUIÇÃO ${doc.id}")
-                    institutionIdList.add(doc.id)
-                }
-
-                if (institutionIdList.contains(associationId)) {
-
-                    Log.i("Test", "ESTE ESTA ASSOCIADO A institution        ------------")
-                    setupWithAssociationType("institution")
+                    Log.i("Test", "collection institution not existed")
+                    searchAmongPerson()
 
                 } else {
 
-                    Log.i("Test", "ESTE ESTA ASSOCIADO A establishment        ------------")
-                    setupWithAssociationType("establishment")
+                    FirebaseFirestore.getInstance().collection("institution")
+                        .get()
+                        .addOnSuccessListener {
+                            for (doc in it) {
+                                if (doc.toObject(Institution::class.java).id == currentUserId) {
+
+                                    Log.i("Test", "verificação 1")
+                                    setupToPersonAndInstitution()
+
+                                }
+                            }
+                            searchAmongPerson()
+
+                        }.addOnFailureListener {
+
+                            Log.i("Test", "Erro em verifyAssociationType")
+
+                        }
                 }
-
-            }.addOnFailureListener {
-
-                Log.i("Test", "Não foi possível recuperar todas as instituições do banco de dados")
-
             }
     }
 
-    private fun setupWithAssociationType(type : String){
+    private fun searchAmongPerson() {
 
-        if(type == "institution"){
+        val currentUserId = FirebaseAuth.getInstance().uid
 
-            binding.floatingActionButton.show()
-            Log.i("Test","CHEGUEI ATÉ AQUI institution")
-
-        }else{
-
-            binding.floatingActionButton.hide()
-            Log.i("Test","CHEGUEI ATÉ AQUI establishment")
-
-        }
-    }
-
-    private fun fetchCards(){
-
-        FirebaseFirestore.getInstance().collection("requirements")
-            .orderBy("timestamp", Query.Direction.DESCENDING)
+        FirebaseFirestore.getInstance().collection("person")
             .get()
             .addOnSuccessListener {
-                for(doc in it){
+                if (it.isEmpty) {
 
-                    listCards.add(doc.toObject(HomeCardView::class.java))
+                    Log.i("Test", "collection person not existed")
+                    setupToEstablishment()
 
+                } else {
+
+                    FirebaseFirestore.getInstance().collection("person")
+                        .get()
+                        .addOnSuccessListener {
+                            for (doc in it) {
+                                if (doc.toObject(Person::class.java).id == currentUserId) {
+
+                                    Log.i("Test", "verificação 2")
+                                    setupToPersonAndInstitution()
+                                    return@addOnSuccessListener
+
+                                }
+                                setupToEstablishment()
+
+                            }
+                        }.addOnFailureListener {
+
+                            Log.i("Test", "Erro em searchAmongPerson")
+
+                        }
                 }
-                Log.i("Test","list card rv: ${listCards.toString()}")
-                binding.progressBarHomeFragment.visibility = View.INVISIBLE
-                val homeAdapter = HomeAdapter(listCards)
-                binding.rvHome.adapter = homeAdapter
+            }
+    }
+
+    private fun setupToPersonAndInstitution() {
+
+        fetchCards()
+        binding.floatingActionButton.hide()
+        Log.i("Test", "CHEGUEI ATÉ AQUI institution and person")
+
+    }
+
+    private fun setupToEstablishment() {
+
+        fetchCardsToEstablishment()
+        binding.floatingActionButton.show()
+        Log.i("Test", "CHEGUEI ATÉ AQUI establishment")
+
+    }
+
+    private fun fetchCards() {
+
+        FirebaseFirestore.getInstance().collection("offer")
+            .get()
+            .addOnSuccessListener {
+                if (it.isEmpty) {
+
+                    Log.i("Test", "collection offer not existed")
+                    binding.textViewNotification.text = "Nenhuma oferta foi publicada."
+                    binding.progressBarHomeFragment.visibility = View.INVISIBLE
+
+                } else {
+
+                    FirebaseFirestore.getInstance().collection("offer")
+                        .orderBy("timestamp", Query.Direction.DESCENDING)
+                        .get()
+                        .addOnSuccessListener {
+                            for (doc in it) {
+
+                                /*Log.i("Test","Chegou em offers pelo menos")
+
+                                var photoUrl: String?
+                                var title: String?
+                                val establishmentId =
+                                    doc.toObject(HomeCardView::class.java).establishmentId
+                                val description =
+                                    doc.toObject(HomeCardView::class.java).description
+                                val timestamp =
+                                    doc.toObject(HomeCardView::class.java).timestamp
+
+                                FirebaseFirestore.getInstance().collection("establishment")
+                                    .document(establishmentId!!)
+                                    .get()
+                                    .addOnSuccessListener { establishment ->
+
+                                        Log.i("Test","Atualizou cards")
+
+                                        photoUrl = establishment.toObject(Establishment::class.java)?.photoUrl
+                                        title = establishment.toObject(Establishment::class.java)?.name
+
+                                        val homeCardView = HomeCardView(
+                                            establishmentId,
+                                            photoUrl,
+                                            title,
+                                            description,
+                                            timestamp
+                                        )
+
+                                        listCards.add(homeCardView)
+
+                                    }*/
+
+                                listCards.add(doc.toObject(HomeCardView::class.java))
+
+                            }
+                            //Log.i("Test","list card rv: ${listCards.toString()}")
+                            binding.progressBarHomeFragment.visibility = View.INVISIBLE
+                            val homeAdapter = HomeAdapter(listCards)
+                            binding.rvHome.adapter = homeAdapter
+                        }
+                }
+            }
+    }
+
+    private fun fetchCardsToEstablishment() {
+
+        FirebaseFirestore.getInstance().collection("offer")
+            .get()
+            .addOnSuccessListener {
+                if (it.isEmpty) {
+
+                    Log.i("Test", "collection offer not existed")
+                    binding.textViewNotification.text = "Nenhuma oferta foi publicada."
+                    binding.progressBarHomeFragment.visibility = View.INVISIBLE
+
+                } else {
+                    FirebaseFirestore.getInstance().collection("offer")
+                        .orderBy("timestamp", Query.Direction.DESCENDING)
+                        .get()
+                        .addOnSuccessListener {
+                            for (doc in it) {
+
+                                /*Log.i("Test","Chegou em offers pelo menos")
+
+                                var photoUrl: String?
+                                var title: String?
+                                val establishmentId =
+                                    doc.toObject(HomeCardView::class.java).establishmentId
+                                val description =
+                                    doc.toObject(HomeCardView::class.java).description
+                                val timestamp =
+                                    doc.toObject(HomeCardView::class.java).timestamp
+
+                                FirebaseFirestore.getInstance().collection("establishment")
+                                    .document(establishmentId!!)
+                                    .get()
+                                    .addOnSuccessListener { establishment ->
+
+                                        Log.i("Test","Atualizou cards")
+
+                                        photoUrl = establishment.toObject(Establishment::class.java)?.photoUrl
+                                        title = establishment.toObject(Establishment::class.java)?.name
+
+                                        val homeCardView = HomeCardView(
+                                            establishmentId,
+                                            photoUrl,
+                                            title,
+                                            description,
+                                            timestamp
+                                        )
+
+                                        listCards.add(homeCardView)
+
+                                    }*/
+
+                                listCards.add(doc.toObject(HomeCardView::class.java))
+
+                            }
+                            //Log.i("Test","list card rv: ${listCards.toString()}")
+                            binding.progressBarHomeFragment.visibility = View.INVISIBLE
+                            val homeAdapter = HomeAdapterEstablishment(listCards)
+                            binding.rvHome.adapter = homeAdapter
+                        }
+                }
             }
     }
 }

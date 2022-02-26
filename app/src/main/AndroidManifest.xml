@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.donationapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,16 +12,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DonationApp">
         <activity
+            android:name=".RequestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ConversationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".CreateHomeCardActivity"
-            android:exported="false" />
-        <activity
-            android:name=".CreateEstablishmentActivity"
-            android:exported="false" />
-        <activity
-            android:name=".CreateInstitutionActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SelectionActivity"
             android:exported="false" />
         <activity
             android:name=".TopActivity"
