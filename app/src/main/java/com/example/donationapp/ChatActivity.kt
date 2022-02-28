@@ -175,7 +175,6 @@ class ChatActivity : AppCompatActivity() {
                     }
                 }
             }
-
     }
 
     private inner class MessageItem(private var message: Message) : Item<ViewHolder>(){
@@ -186,10 +185,27 @@ class ChatActivity : AppCompatActivity() {
             val textViewMessage : TextView = viewHolder.itemView.findViewById(R.id.textViewMessage)
 
             textViewMessage.text = message.text
-            Picasso.get()
-                .load(establishmentUrlPhoto)
-                .into(imageMessageUser)
 
+            if(message.fromId == FirebaseAuth.getInstance().uid){
+
+                FirebaseFirestore.getInstance().collection(UniversalCommunication.userType)
+                    .document(FirebaseAuth.getInstance().uid!!)
+                    .get()
+                    .addOnSuccessListener {
+
+                        Picasso.get()
+                            .load(it.get("photoUrl").toString())
+                            .into(imageMessageUser)
+
+                    }
+
+            }else{
+
+                Picasso.get()
+                    .load(establishmentUrlPhoto)
+                    .into(imageMessageUser)
+
+            }
         }
 
         override fun getLayout(): Int {

@@ -28,6 +28,9 @@ class ConversationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conversation)
 
+        supportActionBar?.title = "Conversas"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         textViewNotificationConversation = findViewById(R.id.textViewNotificationConversation)
         progressBarConversation = findViewById(R.id.progressBarConversation)
         progressBarConversation.visibility = View.VISIBLE
@@ -40,6 +43,11 @@ class ConversationActivity : AppCompatActivity() {
 
         fetchLastMessage()
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun fetchLastMessage() {

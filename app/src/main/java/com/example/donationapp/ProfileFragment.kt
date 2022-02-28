@@ -14,15 +14,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.view.WindowManager
+import android.widget.*
 import androidx.core.view.children
 import androidx.core.view.isEmpty
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
@@ -43,12 +42,17 @@ class ProfileFragment : Fragment() {
     private lateinit var userName : TextView
     private lateinit var buttonConversations : Button
     private lateinit var profilePhotoUrl : String
+    private lateinit var buttonSolicitations : Button
+    private lateinit var progressBar : ProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view: View = inflater.inflate(R.layout.fragment_profile, container, false)
+
+        progressBar = view.findViewById(R.id.progressBarLogin)
+        progressBar.visibility = View.INVISIBLE
 
         imgView = view.findViewById(R.id.imageViewPhoto)
         buttonPhoto = view.findViewById(R.id.buttonPhoto)
@@ -63,9 +67,17 @@ class ProfileFragment : Fragment() {
         userName = view.findViewById(R.id.userName)
 
         buttonConversations = view.findViewById(R.id.buttonConversations)
+        buttonSolicitations = view.findViewById(R.id.buttonSolicitations)
 
         buttonPhoto.alpha = 1.0f
         fetchInformationProfile()
+
+        buttonSolicitations.setOnClickListener {
+
+            val intent = Intent(context, SolicitationActivity::class.java)
+            startActivity(intent)
+
+        }
 
         buttonConversations.setOnClickListener {
 
@@ -177,9 +189,30 @@ class ProfileFragment : Fragment() {
                 }
 
                 userName.text = it.get("name").toString()
-                textViewDescription.text = it.get("description").toString()
-                textViewAddress.text = it.get("address").toString()
                 textViewPhone.text = it.get("phone").toString()
+
+                if(it.get("description").toString() == "null"){
+
+                    textViewDescription.text = ""
+                    textViewDescription.hint = "Este campo não foi preenchido."
+
+                }else{
+
+                    textViewDescription.text = it.get("description").toString()
+
+                }
+
+                if(it.get("address").toString() == "null"){
+
+                    textViewAddress.text = ""
+                    textViewAddress.hint = "Este campo não foi preenchido."
+
+                }else{
+
+                    textViewAddress.text = it.get("description").toString()
+
+                }
+
 
             }.addOnFailureListener {
 
@@ -199,6 +232,8 @@ class ProfileFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        progressBar.visibility = View.VISIBLE
 
         if (requestCode == 0) {
 
@@ -238,7 +273,7 @@ class ProfileFragment : Fragment() {
             storageReference.downloadUrl.addOnSuccessListener {
 
                 profilePhotoUrl = it.toString()
-                changeProfilePicture(it)
+                changeProfilePicture(profilePhotoUrl)
 
             }.addOnFailureListener {
 
@@ -253,32 +288,49 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun changeProfilePicture(uri: Uri) {
+    private fun changeProfilePicture(url: String) {
 
         val currentUserId = FirebaseAuth.getInstance().uid!!
 
-        when (UniversalCommunication.userType) {
-            "establishment" -> {
+        FirebaseFirestore.getInstance().collection(UniversalCommunication.userType)
+            .document(currentUserId)
+            .update("photoUrl", url)
+            .addOnSuccessListener {
 
-                FirebaseFirestore.getInstance().collection("establishment")
-                    .document(currentUserId)
-                    .update("photoUrl", uri.toString())
-
-            }
-            "institution" -> {
-
-                FirebaseFirestore.getInstance().collection("institution")
-                    .document(currentUserId)
-                    .update("photoUrl", uri.toString())
+                updateRelatedPhoto(url)
 
             }
-            else -> {
+    }
 
-                FirebaseFirestore.getInstance().collection("person")
-                    .document(currentUserId)
-                    .update("photoUrl", uri.toString())
+    private fun updateRelatedPhoto(url: String){
 
-            }
+        val currentUserId = FirebaseAuth.getInstance().uid!!
+
+        progressBar.visibility = View.INVISIBLE
+
+        if(UniversalCommunication.userType == "establishment"){
+
+            FirebaseFirestore.getInstance().collection("offer")
+                .get()
+                .addOnSuccessListener {
+                    for(doc in it){
+
+                        val card = doc.toObject(HomeCardView::class.java)
+
+                        if (card.establishmentId == currentUserId){
+
+                            FirebaseFirestore.getInstance().collection("offer")
+                                .document(card.id!!)
+                                .update("photoUrl", url)
+                                .addOnCompleteListener {
+
+                                    Log.i("Test", "Card updated !")
+
+                                }
+                        }
+                    }
+                }
+
         }
     }
 }

@@ -76,6 +76,12 @@ class HomeAdapter(private val cardList: List<HomeCardView>) :
             val confirmButtonDialog =
                 dialog.findViewById<Button>(R.id.confirmButtonSolicitationDialog)
 
+            val sdf = SimpleDateFormat("dd/M/yyyy")
+            var date : String = sdf.format(calendarView.date)
+            Log.i("Test",date)
+
+            calendarView.minDate = System.currentTimeMillis() - 1000
+
             calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
 
                 Toast.makeText(
@@ -84,15 +90,7 @@ class HomeAdapter(private val cardList: List<HomeCardView>) :
                     Toast.LENGTH_LONG
                 ).show()
 
-                val date = "$dayOfMonth/${month + 1}/$year"
-
-                UniversalCommunication.createSolicitation(
-                    currentCard.title,
-                    currentCard.description,
-                    date,
-                    currentId,
-                    currentCard.establishmentId!!
-                )
+                date = "$dayOfMonth/${month + 1}/$year"
 
                 /*
                 val date : String = "$year/${month+1}/$dayOfMonth"
@@ -103,6 +101,16 @@ class HomeAdapter(private val cardList: List<HomeCardView>) :
             }
 
             confirmButtonDialog.setOnClickListener {
+
+                UniversalCommunication.createSolicitation(
+                    currentCard.id,
+                    currentCard.title,
+                    currentCard.photoUrl,
+                    currentCard.description,
+                    date,
+                    currentId,
+                    currentCard.establishmentId!!
+                )
 
                 Toast.makeText(
                     holder.itemView.context!!,

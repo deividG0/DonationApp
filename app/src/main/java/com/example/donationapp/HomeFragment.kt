@@ -125,7 +125,6 @@ class HomeFragment : Fragment() {
 
         fetchCards()
         binding.floatingActionButton.hide()
-        Log.i("Test", "CHEGUEI ATÉ AQUI institution and person")
 
     }
 
@@ -133,7 +132,6 @@ class HomeFragment : Fragment() {
 
         fetchCardsToEstablishment()
         binding.floatingActionButton.show()
-        Log.i("Test", "CHEGUEI ATÉ AQUI establishment")
 
     }
 

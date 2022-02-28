@@ -11,6 +11,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.*
 
 class CreateHomeCardActivity : AppCompatActivity() {
 
@@ -22,6 +23,9 @@ class CreateHomeCardActivity : AppCompatActivity() {
 
         val buttonCreateHomeCard = findViewById<Button>(R.id.buttonCreateHomeCard)
 
+        supportActionBar?.title = "Publicação de oferta"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         progressBar = findViewById(R.id.progressBarCardCreate)
         progressBar.visibility = View.INVISIBLE
 
@@ -31,6 +35,11 @@ class CreateHomeCardActivity : AppCompatActivity() {
             getCurrentUserData()
 
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun getCurrentUserData(){
@@ -51,13 +60,16 @@ class CreateHomeCardActivity : AppCompatActivity() {
 
     private fun setCard(establishmentPhotoUrl: String?, establishmentName: String?, establishmentId: String?) {
 
+        val id: String = UUID.randomUUID().toString()
+
         val editTextCardDescription = findViewById<TextInputLayout>(R.id.editTextCardDescription)
         val cardDescription : String = editTextCardDescription.editText?.text.toString()
         val timestamp : Long = System.currentTimeMillis()
-        val card = HomeCardView(establishmentId,establishmentPhotoUrl,establishmentName,cardDescription,timestamp)
+        val card = HomeCardView(id,establishmentId,establishmentPhotoUrl,establishmentName,cardDescription,timestamp)
 
         FirebaseFirestore.getInstance().collection("/offer")
-            .add(card)
+            .document(id)
+            .set(card)
             .addOnSuccessListener {
 
                 val intent = Intent(this,TopActivity::class.java)

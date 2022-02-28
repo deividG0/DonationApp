@@ -48,4 +48,7 @@
     <string name="editHere"><u>Edite aqui</u></string>
     <string name="request">Solicitar</string>
     <string name="selectDate">Selecione a data</string>
+    <string name="decline">Recusar</string>
+    <string name="solicitationAcceptConfirmation">A oferta referente a está solicitação será excluída. Deseja continuar ?</string>
+    <string name="solicitationDeclineConfirmation">A solicitação será recusada e deletada. Deseja continuar ?</string>
 </resources>
