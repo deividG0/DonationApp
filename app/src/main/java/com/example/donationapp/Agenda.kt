@@ -5,5 +5,6 @@ class Agenda {
     var data : String? = null
     var title : String? = null
     var description : String? = null
+    var relatedCardId : String? = null
 
 }

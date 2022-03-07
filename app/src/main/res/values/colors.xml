@@ -3,6 +3,9 @@
     <color name="green1">@android:color/holo_green_dark</color>
     <color name="green2">#145A08</color>
     <color name="green3">@android:color/holo_blue_dark</color>
+    <color name="green_light">#e0ffdb</color>
+    <color name="red">#f54242</color>
+    <color name="gray">#cfcfcf</color>
     <!--
 
     <color name="teal_200">#FF03DAC5</color>

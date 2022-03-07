@@ -1,5 +1,7 @@
 package com.example.donationapp
 
+import com.google.android.gms.maps.model.LatLng
+
 class Institution(
     val id : String?,
     val name: String?,
@@ -7,6 +9,7 @@ class Institution(
     val photoUrl: String?,
     val institutionType: String? = null,
     val address: String? = null,
+    val latLng: Latlng,
     val phone: String?,
     val description: String? = null
 ) {
@@ -18,6 +21,7 @@ class Institution(
         "",
         "",
         "",
+        Latlng(),
         "",
         ""
     )

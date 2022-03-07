@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginHorizontal="8dp"
-            android:text="@string/confirm"
+            android:text="@string/send"
             android:textSize="16sp" />
 
     </LinearLayout>

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -29,6 +30,9 @@ class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+
+        supportActionBar?.title = "Cadastre-se"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         //Configurando barra de loading
         setProgressBar()
@@ -57,6 +61,11 @@ class RegisterActivity : AppCompatActivity() {
             createUser()
 
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun setProgressBar() {
@@ -206,7 +215,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun createEstablishment(id: String?, name: String, email: String, phone: String) {
 
         val establishment =
-            Establishment(id, name, email, defaultProfileImageUrl, null, phone)
+            Establishment(id, name, email, defaultProfileImageUrl, null, Latlng(), phone)
 
         FirebaseFirestore.getInstance().collection("establishment")
             .document(id.toString())
@@ -243,7 +252,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun createInstitution(id: String?, name: String, email: String, phone: String) {
 
         val institution =
-            Institution(id, name, email, defaultProfileImageUrl, null, null, phone)
+            Institution(id, name, email, defaultProfileImageUrl, null, null,Latlng(), phone)
 
         FirebaseFirestore.getInstance().collection("institution")
             .document(id.toString())

@@ -19,13 +19,15 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var buttonEnter : Button
     private lateinit var imageViewLogo: ImageView
-    private lateinit var progressBar : ProgressBar
     private lateinit var editTextEmailLogin : TextInputLayout
     private lateinit var editTextPasswordLogin : TextInputLayout
+    private lateinit var loadingDialog : LoadingDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        loadingDialog = LoadingDialog(this)
 
         //Inicializando labels de EditText
         editTextEmailLogin = findViewById(R.id.editTextEmailLogin)
@@ -38,9 +40,6 @@ class MainActivity : AppCompatActivity() {
         Picasso.get()
             .load(uri)
             .into(imageViewLogo)
-
-        //Configurando barra de loading
-        setProgressBar()
 
         //Detecção do clique no botão de "Entrar"
 
@@ -84,8 +83,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        //Fazendo barra de login ficar visível
-        progressBar.visibility = View.VISIBLE
+        loadingDialog.startLoadingDialog()
 
         //Impossibilitando toque na tela pelo usuário
         window.setFlags(
@@ -104,6 +102,8 @@ class MainActivity : AppCompatActivity() {
                     window.clearFlags(
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
+                    loadingDialog.dismissDialog()
+
                     //Estabelecendo nova atividade como topo da pilha e impossibilitando retorno
                     intent.flags =
                         Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -111,18 +111,14 @@ class MainActivity : AppCompatActivity() {
                     //Iniciando nova atividade
                     startActivity(intent)
 
-                    //Desativando a barra de loading
-                    progressBar.visibility = View.INVISIBLE
-
                 }
             }.addOnFailureListener {
-
-                //Desativando a barra de loading
-                progressBar.visibility = View.INVISIBLE
 
                 //Permitindo toque na tela novamente
                 window.clearFlags(
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
+                loadingDialog.dismissDialog()
 
                 //Pop-up de alerta
                 MaterialAlertDialogBuilder(this,
@@ -135,14 +131,5 @@ class MainActivity : AppCompatActivity() {
                 Log.e("Test", it.message.toString(), it)
 
             }
-    }
-
-    private fun setProgressBar() {
-
-        //Esta função cria a indicação de carregamento quando o usuário clica em "Cadastrar"
-
-        progressBar = findViewById(R.id.progressBarLogin)
-        progressBar.visibility = View.INVISIBLE
-
     }
 }

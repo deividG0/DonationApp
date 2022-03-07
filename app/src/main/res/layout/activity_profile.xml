@@ -14,6 +14,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ProgressBar
+            android:id="@+id/progressBarProfileAct"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:indeterminate="true"
+            android:indeterminateTint="#0A3001"
+            android:max="100"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageViewPhoto"
             android:layout_width="150dp"
@@ -76,7 +89,7 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutDescription">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutPhone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -99,13 +112,14 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearLayoutPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutAddress">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutDescription">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -126,6 +140,18 @@
                 android:textSize="16sp" />
 
         </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonPartnershipRequest"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/requestPartnership"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutAddress"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

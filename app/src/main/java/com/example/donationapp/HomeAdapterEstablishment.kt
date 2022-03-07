@@ -10,6 +10,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
+import java.util.*
 
 class HomeAdapterEstablishment(private val cardList : List<HomeCardView>) : RecyclerView.Adapter<HomeAdapterEstablishment.ViewHolder>(){
 
@@ -33,6 +35,12 @@ class HomeAdapterEstablishment(private val cardList : List<HomeCardView>) : Recy
 
         holder.itemView.findViewById<TextView>(R.id.textViewCardTitle).text = currentCard.title
         holder.itemView.findViewById<TextView>(R.id.textViewDescriptionCard).text = currentCard.description
+
+        val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy, HH:mm:ss")
+        val netDate = Date(currentCard.timestamp!!)
+        val date = simpleDateFormat.format(netDate)
+
+        holder.itemView.findViewById<TextView>(R.id.textViewDateCard).text = date
 
     }
 

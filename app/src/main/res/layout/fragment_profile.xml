@@ -15,7 +15,7 @@
         android:layout_height="wrap_content">
 
         <ProgressBar
-            android:id="@+id/progressBarLogin"
+            android:id="@+id/progressBarProfile"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -144,7 +144,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutDescription">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutPhone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -177,13 +177,14 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearLayoutPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutAddress">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutDescription">
 
             <TextView
                 android:layout_width="wrap_content"

@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".AgendaFragment">
 
+    <ProgressBar
+        android:id="@+id/progressBarAgendaFragment"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:indeterminate="true"
+        android:indeterminateTint="#0A3001"
+        android:max="100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/textViewAgenda"
         android:layout_width="wrap_content"

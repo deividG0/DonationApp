@@ -29,7 +29,7 @@ object UniversalCommunication {
         description: String?,
         date: String,
         fromId: String,
-        toId: String
+        toId: String,
     ) {
 
         val timestamp: Long = System.currentTimeMillis()

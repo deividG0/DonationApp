@@ -3,6 +3,7 @@ package com.example.donationapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -32,6 +33,8 @@ class SolicitationActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        binding.progressBarSolicitationFragment.visibility = View.VISIBLE
+
         adapter = GroupAdapter()
 
         supportActionBar?.title = "Solicitações"
@@ -40,7 +43,7 @@ class SolicitationActivity : AppCompatActivity() {
         binding.recyclerViewSolicitation.adapter = adapter
         binding.recyclerViewSolicitation.layoutManager = LinearLayoutManager(this)
 
-        fetchSolicitations()
+        verifyOfferExistence()
 
     }
 
@@ -49,7 +52,7 @@ class SolicitationActivity : AppCompatActivity() {
         return true
     }
 
-    private fun fetchSolicitations() {
+    private fun verifyOfferExistence() {
 
         val currentUserId = FirebaseAuth.getInstance().uid
 
@@ -60,6 +63,7 @@ class SolicitationActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 if (it.isEmpty) {
 
+                    binding.progressBarSolicitationFragment.visibility = View.INVISIBLE
                     binding.textViewSolicitation.text = "Nenhuma solicitação emitida."
                     Log.i("Test", "collection solicitation not existed")
                     adapter.clear()
@@ -70,26 +74,80 @@ class SolicitationActivity : AppCompatActivity() {
                         .collection("solicitations")
                         .orderBy("timestamp", Query.Direction.DESCENDING)
                         .get()
-                        .addOnSuccessListener {
-                            for (doc in it){
+                        .addOnSuccessListener { solicitations ->
+                            for (doc in solicitations) {
+                                FirebaseFirestore.getInstance().collection("offer")
+                                    .whereEqualTo(
+                                        "id",
+                                        doc.toObject(Solicitation::class.java).relatedCardId
+                                    )
+                                    .get()
+                                    .addOnSuccessListener { offers ->
+                                        if (offers.isEmpty && doc.toObject(Solicitation::class.java).relatedCardId != null) {
 
-                                if (UniversalCommunication.userType == "establishment") {
+                                            FirebaseFirestore.getInstance()
+                                                .collection("solicitation")
+                                                .document(currentUserId!!)
+                                                .collection("solicitations")
+                                                .document(doc.get("id").toString())
+                                                .delete()
 
-                                    val solicitation: Solicitation =
-                                        doc.toObject(Solicitation::class.java)
-                                    adapter.add(SolicitationItemEstablishment(solicitation))
+                                        } else {
+                                            if (UniversalCommunication.userType == "establishment") {
 
-                                } else {
+                                                val solicitation: Solicitation =
+                                                    doc.toObject(Solicitation::class.java)
+                                                adapter.add(
+                                                    SolicitationItemEstablishment(
+                                                        solicitation
+                                                    )
+                                                )
 
-                                    val solicitation: Solicitation =
-                                        doc.toObject(Solicitation::class.java)
-                                    adapter.add(SolicitationItem(solicitation))
+                                            } else {
 
-                                }
-
+                                                val solicitation: Solicitation =
+                                                    doc.toObject(Solicitation::class.java)
+                                                adapter.add(SolicitationItem(solicitation))
+                                            }
+                                        }
+                                    }
                             }
+                            binding.progressBarSolicitationFragment.visibility = View.INVISIBLE
                         }
                 }
+            }
+    }
+
+    private fun fetchSolicitations() {
+
+        val currentUserId = FirebaseAuth.getInstance().uid
+
+        FirebaseFirestore.getInstance().collection("solicitation")
+            .document(currentUserId!!)
+            .collection("solicitations")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (doc in documents) {
+                    if (UniversalCommunication.userType == "establishment") {
+
+                        val solicitation: Solicitation =
+                            doc.toObject(Solicitation::class.java)
+                        adapter.add(
+                            SolicitationItemEstablishment(
+                                solicitation
+                            )
+                        )
+
+                    } else {
+
+                        val solicitation: Solicitation =
+                            doc.toObject(Solicitation::class.java)
+                        adapter.add(SolicitationItem(solicitation))
+                    }
+                    Log.i("Test", "Rodou uma vez")
+                }
+                binding.progressBarSolicitationFragment.visibility = View.INVISIBLE
             }
     }
 
@@ -106,6 +164,7 @@ class SolicitationActivity : AppCompatActivity() {
         agenda.title = titleEstablishment
         agenda.data = data
         agenda.description = description
+        agenda.relatedCardId = relatedCardId
 
         var title: String?
 
@@ -132,8 +191,9 @@ class SolicitationActivity : AppCompatActivity() {
                     .add(agenda2)
 
                 deleteSolicitation(id, fromId)
-                deleteCard(relatedCardId!!)
-
+                if (relatedCardId != null) {
+                    deleteCard(relatedCardId!!)
+                }
             }
     }
 
@@ -164,7 +224,7 @@ class SolicitationActivity : AppCompatActivity() {
             .addOnSuccessListener {
 
                 Log.i("Test", "Solicitation deleted ! 2")
-                fetchSolicitations()
+                //fetchSolicitations()
 
             }.addOnFailureListener {
 
@@ -200,14 +260,31 @@ class SolicitationActivity : AppCompatActivity() {
             val statusSolicitation: TextView =
                 viewHolder.itemView.findViewById(R.id.statusSolicitation)
 
-            Picasso.get()
-                .load(solicitation.photoUrl)
-                .into(photoSolicitation)
+            if (solicitation.relatedCardId == null) {
 
-            titleSolicitation.text = solicitation.title
+                viewHolder.itemView.findViewById<View>(R.id.solicitationType)
+                    .setBackgroundResource(R.drawable.bg_item_agenda_rounded_green)
+
+            }
+
+            FirebaseFirestore.getInstance().collection("establishment")
+                .document(solicitation.toId!!)
+                .get()
+                .addOnSuccessListener {
+
+                    Picasso.get()
+                        .load(it.get("photoUrl").toString())
+                        .into(photoSolicitation)
+
+                    titleSolicitation.text = it.get("name").toString()
+
+                }
+
             descriptionSolicitation.text = solicitation.description
             dateSolicitation.text = solicitation.date
-            statusSolicitation.text = solicitation.status
+
+            if (solicitation.status == "pending")
+                statusSolicitation.text = "Pendente"
 
         }
 
@@ -236,6 +313,13 @@ class SolicitationActivity : AppCompatActivity() {
             val buttonSolicitationDecline: Button =
                 viewHolder.itemView.findViewById(R.id.buttonSolicitationDecline)
 
+            if (solicitation.relatedCardId == null) {
+
+                viewHolder.itemView.findViewById<View>(R.id.solicitationType)
+                    .setBackgroundResource(R.drawable.bg_item_agenda_rounded_green)
+
+            }
+
             buttonSolicitationAccept.setOnClickListener {
 
                 MaterialAlertDialogBuilder(viewHolder.itemView.context)
@@ -255,8 +339,14 @@ class SolicitationActivity : AppCompatActivity() {
                             solicitation.fromId
                         )
 
-                        Toast.makeText(viewHolder.itemView.context, "PROSSEGUIU", Toast.LENGTH_LONG)
+                        Toast.makeText(
+                            viewHolder.itemView.context,
+                            "Solicitação aceita !",
+                            Toast.LENGTH_LONG
+                        )
                             .show()
+
+                        adapter.remove(viewHolder.item)
 
                     }
                     .show()
@@ -279,11 +369,39 @@ class SolicitationActivity : AppCompatActivity() {
 
             }
 
-            Picasso.get()
-                .load(solicitation.photoUrl)
-                .into(photoSolicitation)
+            FirebaseFirestore.getInstance().collection("institution")
+                .get()
+                .addOnSuccessListener {
+                    for (doc in it) {
+                        if (doc.get("id") == solicitation.fromId) {
 
-            titleSolicitation.text = solicitation.title
+                            Picasso.get()
+                                .load(doc.get("photoUrl").toString())
+                                .into(photoSolicitation)
+
+                            titleSolicitation.text = doc.get("name").toString()
+                            return@addOnSuccessListener
+
+                        }
+                    }
+                    FirebaseFirestore.getInstance().collection("person")
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            for (doc in documents) {
+                                if (doc.get("id") == solicitation.fromId) {
+
+                                    Picasso.get()
+                                        .load(doc.get("photoUrl").toString())
+                                        .into(photoSolicitation)
+
+                                    titleSolicitation.text = doc.get("name").toString()
+                                    return@addOnSuccessListener
+
+                                }
+                            }
+                        }
+                }
+
             descriptionSolicitation.text = solicitation.description
             dateSolicitation.text = solicitation.date
 

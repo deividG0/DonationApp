@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -32,8 +34,14 @@ class ConversationActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         textViewNotificationConversation = findViewById(R.id.textViewNotificationConversation)
+
         progressBarConversation = findViewById(R.id.progressBarConversation)
         progressBarConversation.visibility = View.VISIBLE
+
+        //Impossibilitando toque na tela pelo usuário
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
         adapter = GroupAdapter()
 
@@ -64,6 +72,11 @@ class ConversationActivity : AppCompatActivity() {
                     Log.i("Test", "collection last-messages not existed")
                     textViewNotificationConversation.text = "Nenhuma conversa foi iniciada."
 
+                    progressBarConversation.visibility = View.INVISIBLE
+                    //Permitindo toque na tela novamente
+                    window.clearFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
                 } else {
                     FirebaseFirestore.getInstance().collection("/last-messages")
                         .document(id)
@@ -80,15 +93,59 @@ class ConversationActivity : AppCompatActivity() {
                                         val conversation: Conversation =
                                             doc.document.toObject(Conversation::class.java)
 
-                                        adapter.add(ConversationItem(conversation))
+                                        val id = doc.document.get("id").toString()
 
+                                        FirebaseFirestore.getInstance().collection("establishment")
+                                            .get()
+                                            .addOnSuccessListener { documents ->
+                                                for (doc in documents){
+                                                    if(doc.toObject(Establishment::class.java).id == id){
+
+                                                        conversation.photoUrl = doc.get("photoUrl").toString()
+                                                        conversation.username = doc.get("name").toString()
+                                                        adapter.add(ConversationItem(conversation))
+
+                                                    }
+                                                }
+                                            }
+
+                                        FirebaseFirestore.getInstance().collection("institution")
+                                            .get()
+                                            .addOnSuccessListener { documents ->
+                                                for (doc in documents){
+                                                    if(doc.toObject(Institution::class.java).id == id){
+
+                                                        conversation.photoUrl = doc.get("photoUrl").toString()
+                                                        conversation.username = doc.get("name").toString()
+                                                        adapter.add(ConversationItem(conversation))
+
+                                                    }
+                                                }
+                                            }
+
+                                        FirebaseFirestore.getInstance().collection("person")
+                                            .get()
+                                            .addOnSuccessListener { documents ->
+                                                for (doc in documents){
+                                                    if(doc.toObject(Person::class.java).id == id){
+
+                                                        conversation.photoUrl = doc.get("photoUrl").toString()
+                                                        conversation.username = doc.get("name").toString()
+                                                        adapter.add(ConversationItem(conversation))
+
+                                                    }
+                                                }
+                                            }
                                     }
                                 }
                             }
+                            progressBarConversation.visibility = View.INVISIBLE
+                            //Permitindo toque na tela novamente
+                            window.clearFlags(
+                                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                         }
                 }
             }
-        progressBarConversation.visibility = View.INVISIBLE
     }
 
     private inner class ConversationItem(private var conversation: Conversation) :

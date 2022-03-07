@@ -1,8 +1,6 @@
 package com.example.donationapp
 
-import android.app.AlertDialog
 import android.app.Dialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -16,12 +14,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.*
-import androidx.core.view.children
-import androidx.core.view.isEmpty
-import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
@@ -33,17 +27,18 @@ class ProfileFragment : Fragment() {
     private var selectedUri: Uri? = null
     private lateinit var imgView: ImageView
     private lateinit var buttonPhoto: Button
-    private lateinit var textViewDescription : TextView
-    private lateinit var textViewAddress : TextView
-    private lateinit var textViewPhone : TextView
-    private lateinit var editDescriptionProfile : TextView
-    private lateinit var editAddressProfile : TextView
-    private lateinit var editPhoneProfile : TextView
-    private lateinit var userName : TextView
-    private lateinit var buttonConversations : Button
-    private lateinit var profilePhotoUrl : String
-    private lateinit var buttonSolicitations : Button
-    private lateinit var progressBar : ProgressBar
+    private lateinit var textViewDescription: TextView
+    private lateinit var textViewAddress: TextView
+    private lateinit var textViewPhone: TextView
+    private lateinit var editDescriptionProfile: TextView
+    private lateinit var editAddressProfile: TextView
+    private lateinit var editPhoneProfile: TextView
+    private lateinit var userName: TextView
+    private lateinit var buttonConversations: Button
+    private lateinit var profilePhotoUrl: String
+    private lateinit var buttonSolicitations: Button
+    private lateinit var progressBar: ProgressBar
+    private lateinit var linearLayoutAddress: LinearLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,9 +46,15 @@ class ProfileFragment : Fragment() {
     ): View? {
         val view: View = inflater.inflate(R.layout.fragment_profile, container, false)
 
-        progressBar = view.findViewById(R.id.progressBarLogin)
-        progressBar.visibility = View.INVISIBLE
+        progressBar = view.findViewById(R.id.progressBarProfile)
+        progressBar.visibility = View.VISIBLE
 
+        //Impossibilitando toque na tela pelo usuário
+        activity?.window?.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
+        linearLayoutAddress = view.findViewById(R.id.linearLayoutAddress)
         imgView = view.findViewById(R.id.imageViewPhoto)
         buttonPhoto = view.findViewById(R.id.buttonPhoto)
 
@@ -72,6 +73,12 @@ class ProfileFragment : Fragment() {
         buttonPhoto.alpha = 1.0f
         fetchInformationProfile()
 
+        if (UniversalCommunication.userType == "person") {
+
+            linearLayoutAddress.visibility = View.INVISIBLE
+
+        }
+
         buttonSolicitations.setOnClickListener {
 
             val intent = Intent(context, SolicitationActivity::class.java)
@@ -81,7 +88,7 @@ class ProfileFragment : Fragment() {
 
         buttonConversations.setOnClickListener {
 
-            val intent = Intent(context,ConversationActivity::class.java)
+            val intent = Intent(context, ConversationActivity::class.java)
             startActivity(intent)
 
         }
@@ -94,7 +101,9 @@ class ProfileFragment : Fragment() {
 
         editAddressProfile.setOnClickListener {
 
-            showInputDialogAlert("Insira o endereço: ", "Endereço", "address")
+            //showInputDialogAlert("Insira o endereço: ", "Endereço", "address")
+            val intent = Intent(context, SelectLocationActivity::class.java)
+            startActivity(intent)
         }
 
         editPhoneProfile.setOnClickListener {
@@ -105,6 +114,7 @@ class ProfileFragment : Fragment() {
 
         buttonPhoto.setOnClickListener {
 
+            progressBar.visibility = View.VISIBLE
             selectPhoto()
 
         }
@@ -112,7 +122,7 @@ class ProfileFragment : Fragment() {
         return view
     }
 
-    private fun setInformation(field : String, information : String) {
+    private fun setInformation(field: String, information: String) {
 
         val currentUserId = FirebaseAuth.getInstance().uid!!
 
@@ -122,11 +132,11 @@ class ProfileFragment : Fragment() {
 
     }
 
-    private fun showInputDialogAlert(title: String, hint: String, field : String){
+    private fun showInputDialogAlert(title: String, hint: String, field: String) {
 
         val dialog = Dialog(context!!)
 
-        var information : String? = null
+        var information: String?
 
         dialog.setContentView(R.layout.profile_dialog_input)
 
@@ -143,7 +153,7 @@ class ProfileFragment : Fragment() {
 
         confirmButtonDialog.setOnClickListener {
 
-            if(inputDialogText.editText?.text!!.isEmpty()){
+            if (inputDialogText.editText?.text!!.isEmpty()) {
 
                 inputDialogText.error = "Este campo não foi preenchido"
                 return@setOnClickListener
@@ -154,7 +164,7 @@ class ProfileFragment : Fragment() {
             setInformation(field, information!!)
             fetchInformationProfile()
 
-            Log.i("Test",inputDialogText.editText?.text.toString())
+            Log.i("Test", inputDialogText.editText?.text.toString())
 
             dialog.dismiss()
 
@@ -178,7 +188,9 @@ class ProfileFragment : Fragment() {
 
                 //Log.i("Test", "Deu fetch profile picture, URL: ${it.get("photoUrl").toString()}")
 
-                if(it.get("photoUrl").toString() != UniversalCommunication.defaultProfileImageUrl){
+                if (it.get("photoUrl")
+                        .toString() != UniversalCommunication.defaultProfileImageUrl
+                ) {
 
                     Picasso.get()
                         .load(url)
@@ -191,35 +203,38 @@ class ProfileFragment : Fragment() {
                 userName.text = it.get("name").toString()
                 textViewPhone.text = it.get("phone").toString()
 
-                if(it.get("description").toString() == "null"){
+                if (it.get("description").toString() == "null") {
 
                     textViewDescription.text = ""
                     textViewDescription.hint = "Este campo não foi preenchido."
 
-                }else{
+                } else {
 
                     textViewDescription.text = it.get("description").toString()
 
                 }
 
-                if(it.get("address").toString() == "null"){
+                if (it.get("address").toString() == "null") {
 
                     textViewAddress.text = ""
                     textViewAddress.hint = "Este campo não foi preenchido."
 
-                }else{
+                } else {
 
-                    textViewAddress.text = it.get("description").toString()
+                    textViewAddress.text = it.get("address").toString()
 
                 }
+                progressBar.visibility = View.INVISIBLE
 
+                //Permitindo toque na tela novamente
+                activity?.window?.clearFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
             }.addOnFailureListener {
 
-                Log.i("Test","Erro ao carregar foto de perfil")
+                Log.i("Test", "Erro ao carregar foto de perfil")
 
             }
-
     }
 
     private fun selectPhoto() {
@@ -233,14 +248,17 @@ class ProfileFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        progressBar.visibility = View.VISIBLE
+        //Impossibilitando toque na tela pelo usuário
+        activity?.window?.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
         if (requestCode == 0) {
 
             selectedUri = data?.data
             var bitmap: Bitmap?
 
-            if (selectedUri == null){
+            if (selectedUri == null) {
                 return
             }
 
@@ -298,26 +316,36 @@ class ProfileFragment : Fragment() {
             .addOnSuccessListener {
 
                 updateRelatedPhoto(url)
+                fetchInformationProfile()
+
+            }.addOnFailureListener {
+
+                Toast.makeText(context,"Erro ao atualizar imagem de perfil.",Toast.LENGTH_SHORT).show()
 
             }
+
     }
 
-    private fun updateRelatedPhoto(url: String){
+    private fun updateRelatedPhoto(url: String) {
 
         val currentUserId = FirebaseAuth.getInstance().uid!!
 
         progressBar.visibility = View.INVISIBLE
 
-        if(UniversalCommunication.userType == "establishment"){
+        //Permitindo toque na tela novamente
+        activity?.window?.clearFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
+        if (UniversalCommunication.userType == "establishment") {
 
             FirebaseFirestore.getInstance().collection("offer")
                 .get()
                 .addOnSuccessListener {
-                    for(doc in it){
+                    for (doc in it) {
 
                         val card = doc.toObject(HomeCardView::class.java)
 
-                        if (card.establishmentId == currentUserId){
+                        if (card.establishmentId == currentUserId) {
 
                             FirebaseFirestore.getInstance().collection("offer")
                                 .document(card.id!!)
@@ -333,4 +361,10 @@ class ProfileFragment : Fragment() {
 
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        fetchInformationProfile()
+    }
+
 }

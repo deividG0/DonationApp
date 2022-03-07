@@ -1,13 +1,19 @@
 package com.example.donationapp
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Html
+import android.text.Spanned
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -18,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 class TopActivity : AppCompatActivity() {
 
     private lateinit var progressBar: ProgressBar
+    private lateinit var bottomNavigation : BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,20 +35,9 @@ class TopActivity : AppCompatActivity() {
 
         //Inicializando menu inferior e configurando-o com a navegação entre os fragmentos
 
-        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        bottomNavigation = findViewById(R.id.bottom_navigation)
         val navController = findNavController(R.id.fragmentContainerView)
         bottomNavigation.setupWithNavController(navController)
-
-        /*
-
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        val bundle = Bundle()
-        bundle.putString("message", getAssociationType())
-        val homeFragment = HomeFragment()
-        homeFragment.arguments = bundle
-        fragmentTransaction.replace(R.id.fragmentContainerView, homeFragment).commit()
-
-         */
 
         Toast.makeText(this, "USER ID: ${FirebaseAuth.getInstance().uid}", Toast.LENGTH_SHORT)
             .show()
@@ -49,46 +45,6 @@ class TopActivity : AppCompatActivity() {
         verifyAuthentication()
 
     }
-
-
-    /*private fun verifyFirstLogin() {
-
-        val idCurrentUser = FirebaseAuth.getInstance().uid.toString()
-
-        var user: User
-
-        FirebaseFirestore.getInstance().collection("/users")
-            .document(idCurrentUser)
-            .get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    Log.d("Test", "DocumentSnapshot dado: ${document.data}")
-                } else {
-                    Log.d("Test", "Documento não encontrado")
-                }
-
-                user = document.toObject(User::class.java)!!
-
-                if (user.associationId == null) {
-
-                    val intent = Intent(this, SelectionActivity::class.java)
-
-                    //Estabelecendo nova atividade como topo da pilha e impossibilitando retorno
-                    intent.flags =
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-
-                    startActivity(intent)
-
-                }else{
-                    progressBar.visibility = View.INVISIBLE
-
-                }
-
-            }
-            .addOnFailureListener { exception ->
-                Log.d("Test", "Erro", exception)
-            }
-    }*/
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
@@ -104,7 +60,35 @@ class TopActivity : AppCompatActivity() {
             R.id.logout -> signOut()
 
         }
+        when (item.itemId) {
+
+            R.id.info -> {
+
+                when (bottomNavigation.selectedItemId) {
+
+                    R.id.home -> showInformation(R.string.home_info)
+                    R.id.agenda -> showInformation(R.string.agenda_info)
+                    R.id.map -> showInformation(R.string.map_info)
+                    R.id.profile -> showInformation(R.string.profile_info)
+
+                }
+            }
+        }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showInformation(informationText : Int){
+
+        val dialog = Dialog(this)
+
+        dialog.setContentView(R.layout.information_dialog)
+
+        dialog.findViewById<TextView>(R.id.textViewInfo).text = resources.getString(informationText)
+
+        dialog.setCancelable(true)
+
+        dialog.show()
+
     }
 
     private fun signOut() {
@@ -116,7 +100,7 @@ class TopActivity : AppCompatActivity() {
 
     private fun verifyAuthentication() {
 
-        if (FirebaseAuth.getInstance().uid == null) {
+        if (FirebaseAuth.getInstance().uid == null || FirebaseAuth.getInstance().currentUser == null) {
 
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -140,6 +124,7 @@ class TopActivity : AppCompatActivity() {
                     if(doc.toObject(Establishment::class.java).id == currentUserId){
 
                         UniversalCommunication.userType = "establishment"
+                        Toast.makeText(this,"userType: establishment",Toast.LENGTH_SHORT).show()
 
                     }
                 }
@@ -149,9 +134,10 @@ class TopActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener {
                 for (doc in it){
-                    if(doc.toObject(Establishment::class.java).id == currentUserId){
+                    if(doc.toObject(Institution::class.java).id == currentUserId){
 
                         UniversalCommunication.userType = "institution"
+                        Toast.makeText(this,"userType: institution",Toast.LENGTH_SHORT).show()
 
                     }
                 }
@@ -161,9 +147,10 @@ class TopActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener {
                 for (doc in it){
-                    if(doc.toObject(Establishment::class.java).id == currentUserId){
+                    if(doc.toObject(Person::class.java).id == currentUserId){
 
                         UniversalCommunication.userType = "person"
+                        Toast.makeText(this,"userType: person",Toast.LENGTH_SHORT).show()
 
                     }
                 }

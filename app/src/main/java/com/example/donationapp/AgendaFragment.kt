@@ -16,6 +16,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
+import java.text.SimpleDateFormat
+import java.util.*
 
 class AgendaFragment : Fragment() {
 
@@ -27,6 +29,8 @@ class AgendaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAgendaBinding.inflate(inflater, container, false)
+
+        binding.progressBarAgendaFragment.visibility = View.VISIBLE
 
         adapter = GroupAdapter()
 
@@ -68,6 +72,7 @@ class AgendaFragment : Fragment() {
             .addOnSuccessListener {
                 if (it.isEmpty) {
 
+                    binding.progressBarAgendaFragment.visibility = View.INVISIBLE
                     binding.textViewAgenda.text = "Nenhuma entrega/busca marcada."
                     Log.i("Test", "collection agenda not existed")
 
@@ -89,11 +94,13 @@ class AgendaFragment : Fragment() {
 
                                         val agenda: Agenda =
                                             doc.document.toObject(Agenda::class.java)
+
                                         adapter.add(AgendaItem(agenda))
 
                                     }
                                 }
                             }
+                            binding.progressBarAgendaFragment.visibility = View.INVISIBLE
                         }
                 }
             }
@@ -109,6 +116,32 @@ class AgendaFragment : Fragment() {
                 viewHolder.itemView.findViewById(R.id.textViewNameAgenda)
             val description: TextView =
                 viewHolder.itemView.findViewById(R.id.textViewDescriptionAgenda)
+
+            val date = SimpleDateFormat("dd/MM/yyyy").parse(agenda.data)
+
+            // Timestamp 7 days = 604800000L
+
+            val today = Date() //SimpleDateFormat("dd/MM/yyyy").format(Date())
+
+            val nestWeek = today.time + 604800000L
+
+            if (agenda.relatedCardId==null){
+
+                viewHolder.itemView.findViewById<View>(R.id.agendaType).setBackgroundResource(R.drawable.bg_item_agenda_rounded_green)
+
+            }else if(date.time <= nestWeek){
+
+                viewHolder.itemView.findViewById<View>(R.id.agendaType).setBackgroundResource(R.drawable.bg_item_agenda_rounded_red)
+
+            }else if(date.time < today.time){
+
+                viewHolder.itemView.findViewById<View>(R.id.agendaType).setBackgroundResource(R.drawable.bg_item_agenda_rounded_gray)
+
+            }else{
+
+                viewHolder.itemView.findViewById<View>(R.id.agendaType).setBackgroundResource(R.drawable.bg_item_agenda_rounded_white)
+
+            }
 
             data.text = agenda.data
             establishmentName.text = agenda.title

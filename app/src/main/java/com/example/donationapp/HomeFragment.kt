@@ -68,8 +68,9 @@ class HomeFragment : Fragment() {
                             for (doc in it) {
                                 if (doc.toObject(Institution::class.java).id == currentUserId) {
 
-                                    Log.i("Test", "verificação 1")
+                                    Log.i("Test", "verificação is institution")
                                     setupToPersonAndInstitution()
+                                    return@addOnSuccessListener
 
                                 }
                             }
@@ -216,39 +217,6 @@ class HomeFragment : Fragment() {
                         .get()
                         .addOnSuccessListener {
                             for (doc in it) {
-
-                                /*Log.i("Test","Chegou em offers pelo menos")
-
-                                var photoUrl: String?
-                                var title: String?
-                                val establishmentId =
-                                    doc.toObject(HomeCardView::class.java).establishmentId
-                                val description =
-                                    doc.toObject(HomeCardView::class.java).description
-                                val timestamp =
-                                    doc.toObject(HomeCardView::class.java).timestamp
-
-                                FirebaseFirestore.getInstance().collection("establishment")
-                                    .document(establishmentId!!)
-                                    .get()
-                                    .addOnSuccessListener { establishment ->
-
-                                        Log.i("Test","Atualizou cards")
-
-                                        photoUrl = establishment.toObject(Establishment::class.java)?.photoUrl
-                                        title = establishment.toObject(Establishment::class.java)?.name
-
-                                        val homeCardView = HomeCardView(
-                                            establishmentId,
-                                            photoUrl,
-                                            title,
-                                            description,
-                                            timestamp
-                                        )
-
-                                        listCards.add(homeCardView)
-
-                                    }*/
 
                                 listCards.add(doc.toObject(HomeCardView::class.java))
 

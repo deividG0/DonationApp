@@ -1,12 +1,16 @@
 package com.example.donationapp
 
+import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.TextView
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
@@ -42,6 +46,37 @@ class CreateHomeCardActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+        menuInflater.inflate(R.menu.top_menu_create_card, menu)
+        return true
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+
+            R.id.info -> showInformation(R.string.create_card_info)
+
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showInformation(informationText : Int){
+
+        val dialog = Dialog(this)
+
+        dialog.setContentView(R.layout.information_dialog)
+
+        dialog.findViewById<TextView>(R.id.textViewInfo).text = resources.getString(informationText)
+
+        dialog.setCancelable(true)
+
+        dialog.show()
+
+    }
+
     private fun getCurrentUserData(){
 
         val currentUserId = FirebaseAuth.getInstance().uid!!
@@ -66,6 +101,16 @@ class CreateHomeCardActivity : AppCompatActivity() {
         val cardDescription : String = editTextCardDescription.editText?.text.toString()
         val timestamp : Long = System.currentTimeMillis()
         val card = HomeCardView(id,establishmentId,establishmentPhotoUrl,establishmentName,cardDescription,timestamp)
+
+        editTextCardDescription.error = null
+
+        if (cardDescription == null || cardDescription == ""){
+
+            editTextCardDescription.error = "Este campo está em branco."
+            progressBar.visibility = View.INVISIBLE
+            return
+
+        }
 
         FirebaseFirestore.getInstance().collection("/offer")
             .document(id)

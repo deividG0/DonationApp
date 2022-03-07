@@ -28,7 +28,6 @@
     <string name="enterEstablishmentName">Digite o nome do estabelecimento</string>
     <string name="enterEstablishmentAddress">Digite o endereço do estabelecimento</string>
     <string name="enterEstablishmentPhone">Digite o telefone do estabelecimento</string>
-    <string name="confirmationAlertSelection">A sua conta será associada a %1$s, está correto ?</string>
     <string name="cancel">Cancelar</string>
     <string name="confirm">Confirmar</string>
     <string name="fab_home_desc">Adicionar</string>
@@ -51,4 +50,32 @@
     <string name="decline">Recusar</string>
     <string name="solicitationAcceptConfirmation">A oferta referente a está solicitação será excluída. Deseja continuar ?</string>
     <string name="solicitationDeclineConfirmation">A solicitação será recusada e deletada. Deseja continuar ?</string>
+    <string name="search">Procurar</string>
+    <string name="insertAddress">Insira um endereço</string>
+    <string name="confirmationLocationSelection">O endereço da sua associação é \"%1$s\", está correto ?</string>
+    <string name="requestPartnership">Solicitar parceria</string>
+    <string name="info">Informações</string>
+    <string name="home_info">
+        Nesta tela você pode visualizar ou adicionar postagens sobre ofertas de alimentos.
+        \n\nCada postagem dispõe de data, hora, tipo e quantidade do alimento, além do nome do estabelecimento que o oferece.
+        \n\nOs beneficiários podem enviar mensagens para os estabelecimentos em busca de mais informações e posteriormente solicitar a entrega/busca do alimento.
+    </string>
+    <string name="agenda_info">
+        Nesta tela você pode visualizar as datas de entrega/busca marcadas.
+        \n\nAs datas apresentadas com uma faixa de verde escura à direita, representam datas referentes à parcerias.
+        \n\nAs datas apresentadas com uma faixa vermelha à direita representam datas próximas à atual.
+        \n\nAs datas apresentadas com uma faixa cinza à direita representam datas que se passaram.
+    </string>
+    <string name="map_info">
+        Nesta tela você pode visualizar o mapa no qual os estabelecimentos e instituições participantes do projeto estão dispostos em pinos vermelhos.
+    </string>
+    <string name="profile_info">
+        Nesta tela você pode visualizar e editar as informações referentes ao seu perfil.
+        \n\nPara trocar a foto de perfil você pode tocar na foto.
+        \n\nPara alterar outras informações toque nos textos de edição.
+    </string>
+    <string name="create_card_info">
+        Para postar uma oferta, descreva informações sobre o alimento como: tipo, quantidade, estado e data de validade.
+        \n\nInforme também qualquer observação que julgar necessária.
+    </string>
 </resources>
