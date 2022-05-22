@@ -27,6 +27,7 @@ class ProfileFragment : Fragment() {
     private var selectedUri: Uri? = null
     private lateinit var imgView: ImageView
     private lateinit var buttonPhoto: Button
+    private lateinit var buttonEditName: Button
     private lateinit var textViewDescription: TextView
     private lateinit var textViewAddress: TextView
     private lateinit var textViewPhone: TextView
@@ -57,6 +58,7 @@ class ProfileFragment : Fragment() {
         linearLayoutAddress = view.findViewById(R.id.linearLayoutAddress)
         imgView = view.findViewById(R.id.imageViewPhoto)
         buttonPhoto = view.findViewById(R.id.buttonPhoto)
+        buttonEditName = view.findViewById(R.id.buttonEditName)
 
         textViewDescription = view.findViewById(R.id.textViewDescription)
         textViewAddress = view.findViewById(R.id.textViewAddress)
@@ -119,6 +121,12 @@ class ProfileFragment : Fragment() {
 
         }
 
+        buttonEditName.setOnClickListener {
+
+            showInputDialogAlert("Insira o nome: ", "Nome", "name")
+
+        }
+
         return view
     }
 
@@ -129,6 +137,15 @@ class ProfileFragment : Fragment() {
         FirebaseFirestore.getInstance().collection(UniversalCommunication.userType)
             .document(currentUserId)
             .update(field, information)
+            .addOnSuccessListener {
+
+                fetchInformationProfile()
+
+            }
+
+        if (field == "name"){
+            updateRelatedCardsName(information)
+        }
 
     }
 
@@ -162,7 +179,6 @@ class ProfileFragment : Fragment() {
             information = inputDialogText.editText?.text.toString()
 
             setInformation(field, information!!)
-            fetchInformationProfile()
 
             Log.i("Test", inputDialogText.editText?.text.toString())
 
@@ -315,7 +331,7 @@ class ProfileFragment : Fragment() {
             .update("photoUrl", url)
             .addOnSuccessListener {
 
-                updateRelatedPhoto(url)
+                updateRelatedCardsPhoto(url)
                 fetchInformationProfile()
 
             }.addOnFailureListener {
@@ -326,7 +342,7 @@ class ProfileFragment : Fragment() {
 
     }
 
-    private fun updateRelatedPhoto(url: String) {
+    private fun updateRelatedCardsPhoto(url: String) {
 
         val currentUserId = FirebaseAuth.getInstance().uid!!
 
@@ -350,6 +366,42 @@ class ProfileFragment : Fragment() {
                             FirebaseFirestore.getInstance().collection("offer")
                                 .document(card.id!!)
                                 .update("photoUrl", url)
+                                .addOnCompleteListener {
+
+                                    Log.i("Test", "Card updated !")
+
+                                }
+                        }
+                    }
+                }
+
+        }
+    }
+
+    private fun updateRelatedCardsName(name: String) {
+
+        val currentUserId = FirebaseAuth.getInstance().uid!!
+
+        progressBar.visibility = View.INVISIBLE
+
+        //Permitindo toque na tela novamente
+        activity?.window?.clearFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
+        if (UniversalCommunication.userType == "establishment") {
+
+            FirebaseFirestore.getInstance().collection("offer")
+                .get()
+                .addOnSuccessListener {
+                    for (doc in it) {
+
+                        val card = doc.toObject(HomeCardView::class.java)
+
+                        if (card.establishmentId == currentUserId) {
+
+                            FirebaseFirestore.getInstance().collection("offer")
+                                .document(card.id!!)
+                                .update("title", name)
                                 .addOnCompleteListener {
 
                                     Log.i("Test", "Card updated !")

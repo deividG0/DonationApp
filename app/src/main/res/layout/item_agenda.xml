@@ -8,8 +8,9 @@
         android:id="@+id/textViewDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="140dp"
         android:layout_margin="16dp"
-        android:text="25"
+        android:text="25/03/2022"
         android:textColor="@color/black"
         android:textSize="26sp"
         android:textStyle="bold"
@@ -32,6 +33,7 @@
         android:id="@+id/textViewDescriptionAgenda"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxWidth="200dp"
         android:text="Descrição da entrega/busca"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="8dp"
@@ -39,6 +41,8 @@
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@id/textViewDate"
         app:layout_constraintTop_toBottomOf="@id/textViewNameAgenda" />
+
+    <!--
 
     <TextView
         android:id="@+id/textViewHoursAgenda"
@@ -52,13 +56,15 @@
         app:layout_constraintStart_toEndOf="@id/textViewDate"
         app:layout_constraintTop_toBottomOf="@id/textViewDescriptionAgenda" />
 
+    -->
+
     <View
         android:layout_width="match_parent"
         android:layout_marginHorizontal="8dp"
         android:layout_marginTop="16dp"
         android:layout_height="2dp"
         android:background="@color/bgcolor"
-        app:layout_constraintTop_toBottomOf="@+id/textViewHoursAgenda"/>
+        app:layout_constraintTop_toBottomOf="@+id/textViewDescriptionAgenda"/>
 
     <View
         android:id="@+id/agendaType"

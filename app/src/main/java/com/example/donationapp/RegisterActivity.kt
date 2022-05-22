@@ -89,11 +89,11 @@ class RegisterActivity : AppCompatActivity() {
         val password = editTextPassword.editText?.text.toString()
         val type = autoCompleteTextType.editText?.text.toString()
 
-        Toast.makeText(
-            this,
-            "name: $name, email: $email, password: $password, password length: ${password.length}",
-            Toast.LENGTH_LONG
-        ).show()
+        //Toast.makeText(
+        //    this,
+        //    "name: $name, email: $email, password: $password, password length: ${password.length}",
+        //    Toast.LENGTH_LONG
+        //).show()
 
         if (email.isEmpty() || name.isEmpty() || password.isEmpty() || type.isEmpty()) {
 

@@ -65,6 +65,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonPhoto" />
 
+        <Button
+            android:id="@+id/buttonEditName"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            app:layout_constraintTop_toTopOf="@+id/userName"
+            app:layout_constraintBottom_toBottomOf="@+id/userName"
+            app:layout_constraintStart_toEndOf="@+id/userName"
+            app:icon="@drawable/ic_edit"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        />
+
         <LinearLayout
             android:id="@+id/linearLayoutButtons"
             android:layout_width="match_parent"

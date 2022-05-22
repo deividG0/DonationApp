@@ -39,7 +39,10 @@ class TopActivity : AppCompatActivity() {
         val navController = findNavController(R.id.fragmentContainerView)
         bottomNavigation.setupWithNavController(navController)
 
-        Toast.makeText(this, "USER ID: ${FirebaseAuth.getInstance().uid}", Toast.LENGTH_SHORT)
+        //Toast.makeText(this, "USER ID: ${FirebaseAuth.getInstance().uid}", Toast.LENGTH_SHORT)
+        //    .show()
+
+        Toast.makeText(this, "Login efetuado !", Toast.LENGTH_LONG)
             .show()
 
         verifyAuthentication()
@@ -124,7 +127,8 @@ class TopActivity : AppCompatActivity() {
                     if(doc.toObject(Establishment::class.java).id == currentUserId){
 
                         UniversalCommunication.userType = "establishment"
-                        Toast.makeText(this,"userType: establishment",Toast.LENGTH_SHORT).show()
+                        Log.i("Test","é do tipo estabelecimento")
+                        //Toast.makeText(this,"userType: establishment",Toast.LENGTH_SHORT).show()
 
                     }
                 }
@@ -137,7 +141,7 @@ class TopActivity : AppCompatActivity() {
                     if(doc.toObject(Institution::class.java).id == currentUserId){
 
                         UniversalCommunication.userType = "institution"
-                        Toast.makeText(this,"userType: institution",Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(this,"userType: institution",Toast.LENGTH_SHORT).show()
 
                     }
                 }
@@ -150,7 +154,7 @@ class TopActivity : AppCompatActivity() {
                     if(doc.toObject(Person::class.java).id == currentUserId){
 
                         UniversalCommunication.userType = "person"
-                        Toast.makeText(this,"userType: person",Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(this,"userType: person",Toast.LENGTH_SHORT).show()
 
                     }
                 }

@@ -99,11 +99,7 @@ class HomeAdapter(private val cardList: List<HomeCardView>) :
 
                 date = "$dayOfMonth/${month + 1}/$year"
 
-                /*
-                val date : String = "$year/${month+1}/$dayOfMonth"
-                val sdf = SimpleDateFormat("yyyy/MM/dd")
-                Log.i("Test","DATA FORMATADA ?   :   ${sdf.parse(date)}")
-                */
+                //date = "$dayOfMonth/${month + 1}/$year"
 
             }
 
