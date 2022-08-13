@@ -75,6 +75,7 @@ class ChatActivity : AppCompatActivity() {
         message.timestamp = timestamp
 
         if (message.text!!.isNotEmpty()){
+
             FirebaseFirestore.getInstance().collection("/conversation")
                 .document(fromId)
                 .collection(toId)
@@ -126,6 +127,8 @@ class ChatActivity : AppCompatActivity() {
                             conversation.username = doc.get("name").toString()
                             conversation.timestamp = message.timestamp
                             conversation.lastMessage = message.text
+
+                            UniversalCommunication.createChatNotification(toId, fromId, doc.get("name").toString(), timestamp, text)
 
                             FirebaseFirestore.getInstance().collection("/last-messages")
                                 .document(toId)

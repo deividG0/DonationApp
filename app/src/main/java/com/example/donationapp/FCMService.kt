@@ -15,9 +15,7 @@ import com.google.firebase.messaging.RemoteMessage
 
 class FCMService : FirebaseMessagingService() {
 
-    fun notify(ii: Intent, data: Map<String, String>) {
-
-        val pIntent: PendingIntent = PendingIntent.getActivity(applicationContext, 0, ii, 0)
+    private fun notify(data: Map<String, String>) {
 
         val notificationManager: NotificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -35,12 +33,33 @@ class FCMService : FirebaseMessagingService() {
             notificationChanel.lightColor = Color.GREEN
             notificationManager.createNotificationChannel(notificationChanel)
         }
+
         val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
-        builder.setAutoCancel(true)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle("Solicitação de oferta")
-            .setContentText((data.get("title")) + " está solicitando uma de suas ofertas.")
-            .setContentIntent(pIntent)
+
+        if (data.get("type") == "message"){
+
+            val ii = Intent(this, ConversationActivity::class.java)
+            val pIntent: PendingIntent = PendingIntent.getActivity(applicationContext, 0, ii, 0)
+
+            builder.setAutoCancel(true)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(data.get("nameSender"))
+                .setContentText("Enviou: " + "\"" + data.get("text") + "\"")
+                .setContentIntent(pIntent)
+
+        }
+        if (data.get("type") == "solicitation"){
+
+            val ii = Intent(this, SolicitationActivity::class.java)
+            val pIntent: PendingIntent = PendingIntent.getActivity(applicationContext, 0, ii, 0)
+
+            builder.setAutoCancel(true)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Solicitação de oferta")
+                .setContentText((data.get("title")) + " está solicitando uma de suas ofertas.")
+                .setContentIntent(pIntent)
+
+        }
 
         notificationManager.notify(1, builder.build())
 
@@ -52,13 +71,7 @@ class FCMService : FirebaseMessagingService() {
 
         val data = p0.data
 
-        //Log.i("Test", p0.messageId.toString())
-
-        if (data == null || data.get("sender") == null) return
-
-        val ii = Intent(this, SolicitationActivity::class.java)
-
-        notify(ii, data)
+        notify(data)
 
         /*
 

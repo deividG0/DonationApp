@@ -19,7 +19,7 @@ object UniversalCommunication {
     const val defaultProfileImageUrl =
         "https://firebasestorage.googleapis.com/v0/b/donationapp-47a1d.appspot.com/o/default-group-icon.png?alt=media&token=9599ca53-56b1-49c0-81c0-f0ac4639a60c"
     lateinit var bottomNavigation: BottomNavigationView
-    lateinit var badgeSolicitation : BadgeDrawable
+    lateinit var badgeSolicitation: BadgeDrawable
 
     fun loadPhoto(url: String, imageView: ImageView) {
 
@@ -105,7 +105,7 @@ object UniversalCommunication {
                     .get()
                     .addOnSuccessListener { e ->
                         val establishment = e.toObject(Establishment::class.java)
-                        if(establishment?.online == false){
+                        if (establishment?.online == false) {
 
                             val solicitationNotification = SolicitationNotification()
                             solicitationNotification.fromId = fromId
@@ -138,9 +138,9 @@ object UniversalCommunication {
 //
 //    }
 
-    fun createBadgeSolicitation(){
+    fun createBadgeSolicitation() {
 
-        var solicitationQuantity : Int = 0
+        var solicitationQuantity: Int = 0
         var currentUserId = FirebaseAuth.getInstance().uid
 
         FirebaseFirestore.getInstance().collection("solicitation")
@@ -149,12 +149,12 @@ object UniversalCommunication {
             .get()
             .addOnSuccessListener {
 
-                for (doc in it){
+                for (doc in it) {
 
                     solicitationQuantity++
 
                 }
-                if (solicitationQuantity>0) {
+                if (solicitationQuantity > 0) {
                     badgeSolicitation = bottomNavigation.getOrCreateBadge(R.id.profile)
                     badgeSolicitation.isVisible = true
                     // An icon only badge will be displayed unless a number is set:
@@ -163,10 +163,79 @@ object UniversalCommunication {
             }
     }
 
-    fun cleanBadgeSolicitation(){
+    fun cleanBadgeSolicitation() {
 
         badgeSolicitation.isVisible = false
         badgeSolicitation.clearNumber()
 
+    }
+
+    fun createChatNotification(toId: String, fromId: String, nameSender: String, timestamp: Long, text: String) {
+
+        FirebaseFirestore.getInstance().collection("establishment")
+            .get()
+            .addOnSuccessListener {
+                for (doc in it) {
+                    val e = doc.toObject(Establishment::class.java)
+                    if (e.id == toId && !e.online) {
+
+                        val chatNotification = ChatNotification()
+                        chatNotification.fromId = fromId
+                        chatNotification.toId = e.id
+                        chatNotification.nameSender = nameSender
+                        chatNotification.text = text
+                        chatNotification.timestamp = timestamp.toString()
+
+                        FirebaseFirestore.getInstance().collection("chatNotifications")
+                            .document(e.token!!)
+                            .set(chatNotification)
+
+                    }
+                }
+            }
+
+        FirebaseFirestore.getInstance().collection("institution")
+            .get()
+            .addOnSuccessListener {
+                for (doc in it) {
+                    val i = doc.toObject(Institution::class.java)
+                    if (i.id == toId && !i.online) {
+
+                        val chatNotification = ChatNotification()
+                        chatNotification.fromId = fromId
+                        chatNotification.toId = i.id
+                        chatNotification.nameSender = nameSender
+                        chatNotification.text = text
+                        chatNotification.timestamp = timestamp.toString()
+
+                        FirebaseFirestore.getInstance().collection("chatNotifications")
+                            .document(i.token!!)
+                            .set(chatNotification)
+
+                    }
+                }
+            }
+
+        FirebaseFirestore.getInstance().collection("person")
+            .get()
+            .addOnSuccessListener {
+                for (doc in it) {
+                    val p = doc.toObject(Person::class.java)
+                    if (p.id == toId && !p.online) {
+
+                        val chatNotification = ChatNotification()
+                        chatNotification.fromId = fromId
+                        chatNotification.toId = p.id
+                        chatNotification.nameSender = nameSender
+                        chatNotification.text = text
+                        chatNotification.timestamp = timestamp.toString()
+
+                        FirebaseFirestore.getInstance().collection("chatNotifications")
+                            .document(p.token!!)
+                            .set(chatNotification)
+
+                    }
+                }
+            }
     }
 }
