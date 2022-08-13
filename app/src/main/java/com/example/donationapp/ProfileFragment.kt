@@ -1,5 +1,6 @@
 package com.example.donationapp
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
@@ -14,6 +15,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.*
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -21,6 +24,11 @@ import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import java.lang.Exception
 import java.util.*
+import com.google.android.material.badge.BadgeUtils
+
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.ExperimentalBadgeUtils
+
 
 class ProfileFragment : Fragment() {
 
@@ -40,6 +48,7 @@ class ProfileFragment : Fragment() {
     private lateinit var buttonSolicitations: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var linearLayoutAddress: LinearLayout
+    private lateinit var solicitationBadge: View
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -83,6 +92,7 @@ class ProfileFragment : Fragment() {
 
         buttonSolicitations.setOnClickListener {
 
+            UniversalCommunication.cleanBadgeSolicitation()
             val intent = Intent(context, SolicitationActivity::class.java)
             startActivity(intent)
 
@@ -129,6 +139,14 @@ class ProfileFragment : Fragment() {
 
         return view
     }
+
+    /*private fun updateBadgeSolicitation(){
+
+        solicitationBadge = LayoutInflater.from(context!!)
+            .inflate(R.layout.badge_solicitation, view, false)
+
+
+    }*/
 
     private fun setInformation(field: String, information: String) {
 

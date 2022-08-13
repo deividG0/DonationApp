@@ -98,6 +98,8 @@ class ChatActivity : AppCompatActivity() {
                         .document(toId)
                         .set(conversation)
 
+
+
                 }.addOnFailureListener {
 
                     Log.e("Test", it.message.toString(),it)
@@ -138,9 +140,7 @@ class ChatActivity : AppCompatActivity() {
                     Log.e("Test", it.message.toString(),it)
 
                 }
-
         }
-
     }
 
     private fun fetchMessages(){

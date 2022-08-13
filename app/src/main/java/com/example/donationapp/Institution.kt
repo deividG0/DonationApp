@@ -11,7 +11,9 @@ class Institution(
     val address: String? = null,
     val latLng: Latlng,
     val phone: String?,
-    val description: String? = null
+    val description: String? = null,
+    val token: String?,
+    val online: Boolean
 ) {
 
     constructor() : this(
@@ -23,7 +25,9 @@ class Institution(
         "",
         Latlng(),
         "",
-        ""
+        "",
+        "",
+        false
     )
 
 }

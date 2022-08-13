@@ -215,7 +215,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun createEstablishment(id: String?, name: String, email: String, phone: String) {
 
         val establishment =
-            Establishment(id, name, email, defaultProfileImageUrl, null, Latlng(), phone)
+            Establishment(id, name, email, defaultProfileImageUrl, null, Latlng(), phone, null, null, false)
 
         FirebaseFirestore.getInstance().collection("establishment")
             .document(id.toString())
@@ -252,7 +252,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun createInstitution(id: String?, name: String, email: String, phone: String) {
 
         val institution =
-            Institution(id, name, email, defaultProfileImageUrl, null, null,Latlng(), phone)
+            Institution(id, name, email, defaultProfileImageUrl, null, null,Latlng(), phone, null, null, false)
 
         FirebaseFirestore.getInstance().collection("institution")
             .document(id.toString())
@@ -288,7 +288,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun createPerson(id: String?, name: String, email: String, phone: String) {
 
         val person =
-            Person(id, name, email, defaultProfileImageUrl, phone)
+            Person(id, name, email, defaultProfileImageUrl, phone, null, false)
 
         FirebaseFirestore.getInstance().collection("person")
             .document(id.toString())

@@ -1,6 +1,6 @@
 package com.example.donationapp
 
-class Solicitation {
+open class Solicitation {
 
     var id : String? = null
     var title : String? = null //

@@ -1,14 +1,14 @@
 package com.example.donationapp
 
-import android.app.AlertDialog
 import android.app.Dialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Html
-import android.text.Spanned
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,8 +20,14 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceIdReceiver
+import com.google.firebase.messaging.FirebaseMessaging
 
 class TopActivity : AppCompatActivity() {
+
+    //NOTIFICATIONS
+    private val CHANNEL_ID = "channel_id_01"
+    private val notificationId = 101
 
     private lateinit var progressBar: ProgressBar
     private lateinit var bottomNavigation : BottomNavigationView
@@ -29,6 +35,9 @@ class TopActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_top)
+
+        val application : DonationApplication = application as DonationApplication
+        getApplication().registerActivityLifecycleCallbacks(application)
 
         progressBar = findViewById(R.id.progressBarTop)
         progressBar.visibility = View.INVISIBLE
@@ -38,6 +47,8 @@ class TopActivity : AppCompatActivity() {
         bottomNavigation = findViewById(R.id.bottom_navigation)
         val navController = findNavController(R.id.fragmentContainerView)
         bottomNavigation.setupWithNavController(navController)
+
+        UniversalCommunication.bottomNavigation = bottomNavigation
 
         //Toast.makeText(this, "USER ID: ${FirebaseAuth.getInstance().uid}", Toast.LENGTH_SHORT)
         //    .show()
@@ -98,10 +109,15 @@ class TopActivity : AppCompatActivity() {
 
         FirebaseAuth.getInstance().signOut()
         verifyAuthentication()
+        UniversalCommunication.firstTime = true
 
     }
 
     private fun verifyAuthentication() {
+
+        val manualReset = true
+
+        //FirebaseAuth.getInstance().uid == null || FirebaseAuth.getInstance().currentUser == null
 
         if (FirebaseAuth.getInstance().uid == null || FirebaseAuth.getInstance().currentUser == null) {
 
@@ -111,53 +127,13 @@ class TopActivity : AppCompatActivity() {
 
         }else{
 
-            verifyUserAccountType()
+            //verifyUserAccountType()
+            UniversalCommunication.createBadgeSolicitation()
 
         }
     }
 
     private fun verifyUserAccountType(){
 
-        val currentUserId = FirebaseAuth.getInstance().uid!!
-
-        FirebaseFirestore.getInstance().collection("establishment")
-            .get()
-            .addOnSuccessListener {
-                for (doc in it){
-                    if(doc.toObject(Establishment::class.java).id == currentUserId){
-
-                        UniversalCommunication.userType = "establishment"
-                        Log.i("Test","é do tipo estabelecimento")
-                        //Toast.makeText(this,"userType: establishment",Toast.LENGTH_SHORT).show()
-
-                    }
-                }
-            }
-
-        FirebaseFirestore.getInstance().collection("institution")
-            .get()
-            .addOnSuccessListener {
-                for (doc in it){
-                    if(doc.toObject(Institution::class.java).id == currentUserId){
-
-                        UniversalCommunication.userType = "institution"
-                        //Toast.makeText(this,"userType: institution",Toast.LENGTH_SHORT).show()
-
-                    }
-                }
-            }
-
-        FirebaseFirestore.getInstance().collection("person")
-            .get()
-            .addOnSuccessListener {
-                for (doc in it){
-                    if(doc.toObject(Person::class.java).id == currentUserId){
-
-                        UniversalCommunication.userType = "person"
-                        //Toast.makeText(this,"userType: person",Toast.LENGTH_SHORT).show()
-
-                    }
-                }
-            }
     }
 }
