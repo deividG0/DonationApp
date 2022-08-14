@@ -55,8 +55,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging'
 
     //Google Maps
-    implementation 'com.google.android.gms:play-services-maps:18.0.2'
-    implementation 'com.google.android.gms:play-services-location:19.0.1'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-location:20.0.0'
 
     //CircleImageView
     implementation 'de.hdodenhof:circleimageview:2.2.0'

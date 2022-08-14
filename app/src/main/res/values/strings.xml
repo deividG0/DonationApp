@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">DonationApp</string>
     <string name="enterEmail">Email</string>
-    <string name="noaccount">Não tem um conta? Crie aqui.</string>
+    <string name="noaccount">Não tem uma conta? Crie aqui.</string>
     <string name="enterPassword">Senha</string>
     <string name="register">Cadastrar</string>
     <string name="enterName">Nome</string>

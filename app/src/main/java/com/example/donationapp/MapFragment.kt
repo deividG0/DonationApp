@@ -31,10 +31,12 @@ class MapFragment : Fragment() {
 
         binding.progressBarMapFragment.visibility = View.VISIBLE
 
+
         //Impossibilitando toque na tela pelo usuário
         activity?.window?.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
 
         googleMapsFragment =
             childFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
@@ -47,6 +49,9 @@ class MapFragment : Fragment() {
                 if (places.size<=1) {
 
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 5.5f))
+                    //Permitindo toque na tela novamente
+                    activity?.window?.clearFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
                 } else {
 
