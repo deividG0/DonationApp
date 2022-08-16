@@ -7,6 +7,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.delay
 import java.util.*
 
 object UniversalCommunication {
@@ -237,5 +238,42 @@ object UniversalCommunication {
                     }
                 }
             }
+    }
+
+    suspend fun verifyUserType(){
+
+        val userId = FirebaseAuth.getInstance().uid
+
+        if (userId != null) {
+            FirebaseFirestore.getInstance().collection("establishment")
+                .get()
+                .addOnSuccessListener {
+                    for (doc in it) {
+                        if (doc.toObject(Establishment::class.java).id == userId) {
+                            this.userType = "establishment"
+                        }
+                    }
+                }
+
+            FirebaseFirestore.getInstance().collection("institution")
+                .get()
+                .addOnSuccessListener {
+                    for (doc in it) {
+                        if (doc.toObject(Institution::class.java).id == userId) {
+                            this.userType = "institution"
+                        }
+                    }
+                }
+
+            FirebaseFirestore.getInstance().collection("person")
+                .get()
+                .addOnSuccessListener {
+                    for (doc in it) {
+                        if (doc.toObject(Person::class.java).id == userId) {
+                            this.userType = "person"
+                        }
+                    }
+                }
+        }
     }
 }

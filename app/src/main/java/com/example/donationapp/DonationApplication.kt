@@ -9,6 +9,9 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class DonationApplication : Application(), Application.ActivityLifecycleCallbacks {
 
@@ -48,6 +51,8 @@ class DonationApplication : Application(), Application.ActivityLifecycleCallback
     private fun setUserType(enabled: Boolean) {
 
         val userId = FirebaseAuth.getInstance().uid
+
+        Log.i("TestInit", "userId: $userId e firstTime: ${UniversalCommunication.firstTime}")
 
         if (userId != null) {
 
@@ -105,11 +110,18 @@ class DonationApplication : Application(), Application.ActivityLifecycleCallback
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
     }
 
+    override fun onCreate() {
+
+        super.onCreate()
+        this.setUserType(true)
+        Log.i("TestInit", "Entrei no onCreate da Application")
+
+    }
+
     override fun onActivityStarted(activity: Activity) {
     }
 
     override fun onActivityResumed(activity: Activity) {
-
         if(UniversalCommunication.firstTime){
 
             this.setUserType(true)

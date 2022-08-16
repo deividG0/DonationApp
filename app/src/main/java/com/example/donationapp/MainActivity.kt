@@ -12,6 +12,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 //ESTA É A ATIVIDADE DE LOGIN
 
@@ -108,8 +111,11 @@ class MainActivity : AppCompatActivity() {
                     intent.flags =
                         Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
 
-                    //Iniciando nova atividade
-                    startActivity(intent)
+                    CoroutineScope(Dispatchers.IO).launch{
+                        UniversalCommunication.verifyUserType()
+                        //Iniciando nova atividade
+                        startActivity(intent)
+                    }
 
                 }
             }.addOnFailureListener {

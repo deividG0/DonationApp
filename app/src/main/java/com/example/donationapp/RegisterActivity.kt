@@ -224,6 +224,8 @@ class RegisterActivity : AppCompatActivity() {
 
                 val intent = Intent(this, TopActivity::class.java)
 
+                UniversalCommunication.userType = "establishment"
+
                 //Permitindo toque na tela novamente
                 window.clearFlags(
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
@@ -261,6 +263,8 @@ class RegisterActivity : AppCompatActivity() {
 
                 val intent = Intent(this, TopActivity::class.java)
 
+                UniversalCommunication.userType = "institution"
+
                 //Permitindo toque na tela novamente
                 window.clearFlags(
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
@@ -296,6 +300,8 @@ class RegisterActivity : AppCompatActivity() {
             .addOnSuccessListener {
 
                 val intent = Intent(this, TopActivity::class.java)
+
+                UniversalCommunication.userType = "person"
 
                 //Permitindo toque na tela novamente
                 window.clearFlags(

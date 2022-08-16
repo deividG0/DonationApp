@@ -25,16 +25,14 @@ import com.google.firebase.messaging.FirebaseMessaging
 
 class TopActivity : AppCompatActivity() {
 
-    //NOTIFICATIONS
-    private val CHANNEL_ID = "channel_id_01"
-    private val notificationId = 101
-
     private lateinit var progressBar: ProgressBar
     private lateinit var bottomNavigation : BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_top)
+
+        Log.i("TestInit", "Entrei no onCreate da Activity")
 
         val application : DonationApplication = application as DonationApplication
         getApplication().registerActivityLifecycleCallbacks(application)
@@ -49,9 +47,6 @@ class TopActivity : AppCompatActivity() {
         bottomNavigation.setupWithNavController(navController)
 
         UniversalCommunication.bottomNavigation = bottomNavigation
-
-        //Toast.makeText(this, "USER ID: ${FirebaseAuth.getInstance().uid}", Toast.LENGTH_SHORT)
-        //    .show()
 
         Toast.makeText(this, "Login efetuado !", Toast.LENGTH_LONG)
             .show()
@@ -114,8 +109,6 @@ class TopActivity : AppCompatActivity() {
     }
 
     private fun verifyAuthentication() {
-
-        val manualReset = true
 
         //FirebaseAuth.getInstance().uid == null || FirebaseAuth.getInstance().currentUser == null
 
