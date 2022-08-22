@@ -1,5 +1,7 @@
 package com.example.donationapp
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.widget.ImageView
 import com.google.android.material.badge.BadgeDrawable
@@ -142,7 +144,17 @@ object UniversalCommunication {
     fun createBadgeSolicitation() {
 
         var solicitationQuantity: Int = 0
-        var currentUserId = FirebaseAuth.getInstance().uid
+        val currentUserId = FirebaseAuth.getInstance().uid
+
+        FirebaseFirestore.getInstance().collection("solicitation").get()
+            .addOnSuccessListener {
+                if (it.isEmpty) {
+                    badgeSolicitation = bottomNavigation.getOrCreateBadge(R.id.profile)
+                    badgeSolicitation.isVisible = true
+                    // An icon only badge will be displayed unless a number is set:
+                    badgeSolicitation.number = solicitationQuantity
+                }
+            }
 
         FirebaseFirestore.getInstance().collection("solicitation")
             .document(currentUserId!!)
@@ -171,7 +183,13 @@ object UniversalCommunication {
 
     }
 
-    fun createChatNotification(toId: String, fromId: String, nameSender: String, timestamp: Long, text: String) {
+    fun createChatNotification(
+        toId: String,
+        fromId: String,
+        nameSender: String,
+        timestamp: Long,
+        text: String
+    ) {
 
         FirebaseFirestore.getInstance().collection("establishment")
             .get()
@@ -240,7 +258,7 @@ object UniversalCommunication {
             }
     }
 
-    suspend fun verifyUserType(){
+    fun startTopActivity(context: Context) {
 
         val userId = FirebaseAuth.getInstance().uid
 
@@ -251,6 +269,8 @@ object UniversalCommunication {
                     for (doc in it) {
                         if (doc.toObject(Establishment::class.java).id == userId) {
                             this.userType = "establishment"
+
+
                         }
                     }
                 }

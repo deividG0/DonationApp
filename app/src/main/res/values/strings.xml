@@ -78,4 +78,7 @@
         Para postar uma oferta, descreva, com clareza, informações sobre o alimento como: tipo, quantidade, estado e data de validade.
         \n\nInforme também qualquer observação que julgar necessária.
     </string>
+    <string name="insertEstablishmentName">Insira o nome do estabelecimento</string>
+    <string name="old">Antigas</string>
+    <string name="recent">Recentes</string>
 </resources>

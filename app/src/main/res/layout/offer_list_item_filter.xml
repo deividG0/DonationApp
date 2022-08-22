@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginVertical="8dp"
+    android:id="@+id/item_filter_root"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:singleSelection="true"
+        app:singleLine="true"
+        app:chipMinTouchTargetSize="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent">
+
+        <com.google.android.material.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipMinTouchTargetSize="36dp"
+            android:clickable="true"
+            app:chipStartPadding="12dp"
+            app:iconStartPadding="0dp"
+            app:iconEndPadding="0dp"
+            app:textStartPadding="0dp"
+            app:textEndPadding="0dp"
+            app:closeIconStartPadding="0dp"
+            app:closeIconEndPadding="0dp"
+            app:chipEndPadding="12dp"
+            android:checkable="true"
+            tools:text="Recentes"
+            android:text="@string/recent"
+            android:id="@+id/recentOfferFilter"
+            android:focusable="true">
+
+        </com.google.android.material.chip.Chip>
+
+        <com.google.android.material.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipMinTouchTargetSize="36dp"
+            android:clickable="true"
+            app:chipStartPadding="12dp"
+            app:iconStartPadding="0dp"
+            app:iconEndPadding="0dp"
+            app:textStartPadding="0dp"
+            app:textEndPadding="0dp"
+            app:closeIconStartPadding="0dp"
+            app:closeIconEndPadding="0dp"
+            app:chipEndPadding="12dp"
+            tools:text="Antigas"
+            android:checkable="true"
+            android:text="@string/old"
+            android:id="@+id/oldOfferFilter"
+            android:focusable="true">
+
+        </com.google.android.material.chip.Chip>
+        <!-- Chips are inserted dynamically over code -->
+
+    </com.google.android.material.chip.ChipGroup>
+
+</ScrollView>

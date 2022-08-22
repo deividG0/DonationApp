@@ -18,6 +18,28 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
+    <SearchView
+        android:id="@+id/searchBox"
+        android:queryHint="@string/insertEstablishmentName"
+        android:iconifiedByDefault="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:queryBackground="@android:color/transparent"
+        />
+
+    <include
+        android:id="@+id/offerFilter"
+        layout="@layout/offer_list_item_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchBox" />
+
     <ProgressBar
         android:id="@+id/progressBarHomeFragment"
         style="?android:attr/progressBarStyleHorizontal"
@@ -29,7 +51,7 @@
         android:max="100"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/offerFilter" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvHome"
@@ -38,7 +60,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/offerFilter" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
 

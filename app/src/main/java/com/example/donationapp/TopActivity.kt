@@ -20,7 +20,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.iid.FirebaseInstanceIdReceiver
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 
 class TopActivity : AppCompatActivity() {
@@ -31,6 +33,8 @@ class TopActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_top)
+
+        Toast.makeText(this,"${FirebaseAuth.getInstance().uid}",Toast.LENGTH_SHORT).show()
 
         Log.i("TestInit", "Entrei no onCreate da Activity")
 
@@ -52,7 +56,6 @@ class TopActivity : AppCompatActivity() {
             .show()
 
         verifyAuthentication()
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

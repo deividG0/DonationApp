@@ -19,4 +19,9 @@
         <item name="colorAccent">@color/green2</item>
     </style>
 
+    <style name="ScadaChipChoice.MaterialComponents.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/gray</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
 </resources>

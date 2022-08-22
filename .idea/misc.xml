@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable-v24/bg_button_rounded_2.xml" value="0.22135416666666666" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.3828125" />
+        <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable-v24/ic_no_filter.xml" value="0.2615" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/bg_badge.xml" value="0.3828125" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/bg_button_photo_rounded.xml" value="0.21822916666666667" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/bg_button_rounded.xml" value="0.3828125" />
@@ -14,7 +15,9 @@
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/bg_item_agenda_rounded_green.xml" value="0.3828125" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/bg_item_agenda_rounded_white.xml" value="0.3828125" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/full_shape.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/ic_close.xml" value="0.134" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/ic_edit.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/ic_filter.xml" value="0.134" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/ic_info.xml" value="0.3828125" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.21927083333333333" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/ic_logout.xml" value="0.3828125" />
@@ -34,10 +37,13 @@
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/activity_selection.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/activity_solicitation.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/activity_top.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/alarm_list_item_chip.xml" value="0.259375" />
+        <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/alarm_list_item_filter.xml" value="0.259375" />
+        <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/alarm_list_item_filter_layout.xml" value="0.259375" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/badge_solicitation.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/conversation_item.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/fragment_agenda.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/fragment_home.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/fragment_home.xml" value="0.264" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/fragment_map.xml" value="0.2" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/fragment_profile.xml" value="0.36685773840541946" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/information_dialog.xml" value="0.36666666666666664" />
@@ -51,6 +57,9 @@
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/item_to_message.xml" value="0.1984375" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/list_item_selection.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/loading_dialog.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/offer_list_item_chip.xml" value="0.259375" />
+        <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/offer_list_item_filter.xml" value="0.259375" />
+        <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/offer_list_item_filter_layout.xml" value="0.264" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/partnership_dialog_input.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/profile_dialog_input.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/solicitation_dialog_input.xml" value="0.36666666666666664" />

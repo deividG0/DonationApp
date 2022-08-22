@@ -12,6 +12,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -97,6 +98,7 @@ class MainActivity : AppCompatActivity() {
             .addOnCompleteListener {
                 if(it.isSuccessful){
 
+                    val userId = it.result.user!!.uid
                     Log.i("Test",it.result.user!!.uid)
 
                     val intent = Intent(this, TopActivity::class.java)
@@ -111,12 +113,38 @@ class MainActivity : AppCompatActivity() {
                     intent.flags =
                         Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
 
-                    CoroutineScope(Dispatchers.IO).launch{
-                        UniversalCommunication.verifyUserType()
-                        //Iniciando nova atividade
-                        startActivity(intent)
-                    }
+                    FirebaseFirestore.getInstance().collection("establishment")
+                        .get()
+                        .addOnSuccessListener { establishments ->
+                            for (doc in establishments) {
+                                if (doc.toObject(Establishment::class.java).id == userId) {
+                                    UniversalCommunication.userType = "establishment"
+                                    startActivity(intent)
+                                }
+                            }
+                        }
 
+                    FirebaseFirestore.getInstance().collection("institution")
+                        .get()
+                        .addOnSuccessListener { institutions ->
+                            for (doc in institutions) {
+                                if (doc.toObject(Institution::class.java).id == userId) {
+                                    UniversalCommunication.userType = "institution"
+                                    startActivity(intent)
+                                }
+                            }
+                        }
+
+                    FirebaseFirestore.getInstance().collection("person")
+                        .get()
+                        .addOnSuccessListener { persons ->
+                            for (doc in persons) {
+                                if (doc.toObject(Person::class.java).id == userId) {
+                                    UniversalCommunication.userType = "person"
+                                    startActivity(intent)
+                                }
+                            }
+                        }
                 }
             }.addOnFailureListener {
 

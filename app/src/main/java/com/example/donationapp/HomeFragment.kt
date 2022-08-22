@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,11 +16,13 @@ import com.google.android.gms.tasks.Tasks.await
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import kotlinx.coroutines.awaitAll
+import java.util.*
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var listCards: MutableList<HomeCardView>
+    private lateinit var tempListCards: MutableList<HomeCardView>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,6 +31,7 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         listCards = mutableListOf()
+        tempListCards = mutableListOf()
 
         binding.progressBarHomeFragment.visibility = View.VISIBLE
 
@@ -44,8 +48,49 @@ class HomeFragment : Fragment() {
             startActivity(intent)
 
         }
-        return binding.root
 
+        binding.searchBox.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                binding.searchBox.clearFocus()
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                tempListCards.clear()
+                val searchText = newText!!.lowercase(Locale.getDefault())
+
+                if (searchText.isNotEmpty()) {
+                    listCards.forEach {
+
+                        if (it.title!!.lowercase(Locale.getDefault()).contains(searchText)) {
+                            tempListCards.add(it)
+                        }
+                    }
+                    binding.rvHome.adapter?.notifyDataSetChanged()
+                } else {
+                    tempListCards.clear()
+                    tempListCards.addAll(listCards)
+                    binding.rvHome.adapter?.notifyDataSetChanged()
+                }
+
+                return false
+            }
+        })
+        //something wrong here
+        binding.offerFilter.recentOfferFilter.setOnClickListener {
+            tempListCards.clear()
+            tempListCards.addAll((listCards.sortedWith(compareBy { it.timestamp })).asReversed())
+            binding.rvHome.adapter?.notifyDataSetChanged()
+        }
+
+        binding.offerFilter.oldOfferFilter.setOnClickListener {
+            tempListCards.clear()
+            tempListCards.addAll(listCards.sortedWith(compareBy { it.timestamp }))
+
+            binding.rvHome.adapter?.notifyDataSetChanged()
+        }
+
+        return binding.root
     }
 
     private fun verifyAssociationType() {
@@ -138,6 +183,9 @@ class HomeFragment : Fragment() {
 
     private fun fetchCards() {
 
+        val homeAdapter = HomeAdapter(tempListCards)
+        binding.rvHome.adapter = homeAdapter
+
         FirebaseFirestore.getInstance().collection("offer")
             .get()
             .addOnSuccessListener {
@@ -155,46 +203,13 @@ class HomeFragment : Fragment() {
                         .addOnSuccessListener {
                             for (doc in it) {
 
-                                /*Log.i("Test","Chegou em offers pelo menos")
-
-                                var photoUrl: String?
-                                var title: String?
-                                val establishmentId =
-                                    doc.toObject(HomeCardView::class.java).establishmentId
-                                val description =
-                                    doc.toObject(HomeCardView::class.java).description
-                                val timestamp =
-                                    doc.toObject(HomeCardView::class.java).timestamp
-
-                                FirebaseFirestore.getInstance().collection("establishment")
-                                    .document(establishmentId!!)
-                                    .get()
-                                    .addOnSuccessListener { establishment ->
-
-                                        Log.i("Test","Atualizou cards")
-
-                                        photoUrl = establishment.toObject(Establishment::class.java)?.photoUrl
-                                        title = establishment.toObject(Establishment::class.java)?.name
-
-                                        val homeCardView = HomeCardView(
-                                            establishmentId,
-                                            photoUrl,
-                                            title,
-                                            description,
-                                            timestamp
-                                        )
-
-                                        listCards.add(homeCardView)
-
-                                    }*/
-
                                 listCards.add(doc.toObject(HomeCardView::class.java))
 
                             }
-                            //Log.i("Test","list card rv: ${listCards.toString()}")
+                            Log.i("Test", "Size list cards ${listCards.size}")
+                            tempListCards.addAll(listCards)
                             binding.progressBarHomeFragment.visibility = View.INVISIBLE
-                            val homeAdapter = HomeAdapter(listCards)
-                            binding.rvHome.adapter = homeAdapter
+                            binding.rvHome.adapter!!.notifyDataSetChanged()
                         }
                 }
             }
@@ -202,6 +217,9 @@ class HomeFragment : Fragment() {
 
     private fun fetchCardsToEstablishment() {
 
+        val homeAdapter = HomeAdapterEstablishment(tempListCards)
+        binding.rvHome.adapter = homeAdapter
+
         FirebaseFirestore.getInstance().collection("offer")
             .get()
             .addOnSuccessListener {
@@ -221,10 +239,10 @@ class HomeFragment : Fragment() {
                                 listCards.add(doc.toObject(HomeCardView::class.java))
 
                             }
-                            //Log.i("Test","list card rv: ${listCards.toString()}")
+                            Log.i("Test", "Size list cards ${listCards.size}")
+                            tempListCards.addAll(listCards)
                             binding.progressBarHomeFragment.visibility = View.INVISIBLE
-                            val homeAdapter = HomeAdapterEstablishment(listCards)
-                            binding.rvHome.adapter = homeAdapter
+                            binding.rvHome.adapter!!.notifyDataSetChanged()
                         }
                 }
             }
