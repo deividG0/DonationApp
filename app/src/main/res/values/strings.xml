@@ -81,4 +81,5 @@
     <string name="insertEstablishmentName">Insira o nome do estabelecimento</string>
     <string name="old">Antigas</string>
     <string name="recent">Recentes</string>
+    <string name="forgetPassword">Esqueceu a senha ?</string>
 </resources>
