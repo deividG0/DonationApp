@@ -93,7 +93,7 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
-                android:layout_margin="16dp"
+                android:layout_margin="8dp"
                 android:text="@string/conversations"
                 app:icon="@drawable/ic_conversation" />
 
@@ -102,7 +102,8 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
-                android:layout_margin="16dp"
+                android:layout_margin="8dp"
+                android:maxEms="11"
                 android:text="@string/solicitations"
                 app:icon="@drawable/ic_info" />
 
@@ -225,6 +226,28 @@
                 android:textColor="@color/green1"
                 android:textSize="16sp"
                 android:layout_gravity="end"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutOffersListButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutAddress">
+
+            <Button
+                android:id="@+id/buttonOffersList"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_margin="8dp"
+                android:text="@string/myOffers"
+                app:icon="@drawable/ic_offers_list" />
 
         </LinearLayout>
 

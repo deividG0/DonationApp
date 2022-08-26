@@ -100,7 +100,7 @@ class CreateHomeCardActivity : AppCompatActivity() {
         val editTextCardDescription = findViewById<TextInputLayout>(R.id.editTextCardDescription)
         val cardDescription : String = editTextCardDescription.editText?.text.toString()
         val timestamp : Long = System.currentTimeMillis()
-        val card = HomeCardView(id,establishmentId,establishmentPhotoUrl,establishmentName,cardDescription,timestamp)
+        val card = HomeCardView(id,establishmentId,establishmentPhotoUrl,0,establishmentName,cardDescription,timestamp)
 
         editTextCardDescription.error = null
 

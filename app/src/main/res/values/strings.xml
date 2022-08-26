@@ -12,6 +12,7 @@
     <string name="profile">Perfil</string>
     <string name="logout">Sair</string>
     <string name="errorLoginMessage">Erro ao tentar fazer log-in, verifique seu email e senha.</string>
+    <string name="confirmDeleteOffer">Tem certeza que deseja deletar essa oferta ?</string>
     <string name="tryAgain">Tentar novamente</string>
     <string name="institution">Instituição</string>
     <string name="establishment">Estabelecimento</string>
@@ -82,4 +83,10 @@
     <string name="old">Antigas</string>
     <string name="recent">Recentes</string>
     <string name="forgetPassword">Esqueceu a senha ?</string>
+    <string name="myOffers">Minhas Ofertas</string>
+    <string name="edit">Editar</string>
+    <string name="delete">Deletar</string>
+    <string name="updateOffer">Edite a oferta</string>
+    <string name="enterNewCardDescription">Digite a nova descrição da sua oferta</string>
+    <string name="progress">Progresso</string>
 </resources>

@@ -347,6 +347,7 @@ class SolicitationActivity : AppCompatActivity() {
                             .show()
 
                         adapter.remove(viewHolder.item)
+                        adapter.notifyDataSetChanged()
 
                     }
                     .show()

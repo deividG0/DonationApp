@@ -49,6 +49,9 @@ class HomeAdapter(private val cardList: List<HomeCardView>) :
         val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy, HH:mm:ss")
         val netDate = Date(currentCard.timestamp!!)
         val date = simpleDateFormat.format(netDate)
+        val progressBar = holder.itemView.findViewById<ProgressBar>(R.id.progressBar)
+
+        progressBar.progress = currentCard.progress!!
 
         holder.itemView.findViewById<TextView>(R.id.textViewDateCard).text = date
 

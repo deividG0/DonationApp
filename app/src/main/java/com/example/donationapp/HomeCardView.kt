@@ -6,6 +6,7 @@ class HomeCardView(
     val id: String? = null,
     val establishmentId: String?,
     val photoUrl: String?,
+    val progress: Int?,
     val title: String?,
     val description: String?,
     var timestamp: Long? = null
@@ -15,6 +16,7 @@ class HomeCardView(
         "",
         "",
         "",
+        null,
         "",
         ""
     )

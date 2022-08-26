@@ -46,6 +46,7 @@ class ProfileFragment : Fragment() {
     private lateinit var buttonConversations: Button
     private lateinit var profilePhotoUrl: String
     private lateinit var buttonSolicitations: Button
+    private lateinit var buttonOffersList: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var linearLayoutAddress: LinearLayout
     private lateinit var solicitationBadge: View
@@ -80,6 +81,7 @@ class ProfileFragment : Fragment() {
 
         buttonConversations = view.findViewById(R.id.buttonConversations)
         buttonSolicitations = view.findViewById(R.id.buttonSolicitations)
+        buttonOffersList = view.findViewById(R.id.buttonOffersList)
 
         buttonPhoto.alpha = 1.0f
         fetchInformationProfile()
@@ -87,6 +89,19 @@ class ProfileFragment : Fragment() {
         if (UniversalCommunication.userType == "person") {
 
             linearLayoutAddress.visibility = View.INVISIBLE
+
+        }
+
+        if (UniversalCommunication.userType != "establishment") {
+
+            buttonOffersList.visibility = View.INVISIBLE
+
+        }
+
+        buttonOffersList.setOnClickListener {
+
+            val intent = Intent(context, OffersListActivity::class.java)
+            startActivity(intent)
 
         }
 
