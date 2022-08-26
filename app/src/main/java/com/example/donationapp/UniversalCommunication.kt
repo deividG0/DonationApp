@@ -127,20 +127,6 @@ object UniversalCommunication {
             }
     }
 
-//    fun sendNotification(n_solicitations : Int, context: Context){
-//
-//        val builder = NotificationCompat.Builder(context,CHANNEL_ID)
-//            .setSmallIcon(R.drawable.ic_info)
-//            .setContentTitle("Solicitações de Entrega/busca")
-//            .setContentText("Você possui $n_solicitations solicitações.")
-//            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//
-//        with(NotificationManagerCompat.from(context)){
-//            notify(notificationId, builder.build())
-//        }
-//
-//    }
-
     fun createBadgeSolicitation() {
 
         var solicitationQuantity: Int = 0
@@ -256,44 +242,5 @@ object UniversalCommunication {
                     }
                 }
             }
-    }
-
-    fun startTopActivity(context: Context) {
-
-        val userId = FirebaseAuth.getInstance().uid
-
-        if (userId != null) {
-            FirebaseFirestore.getInstance().collection("establishment")
-                .get()
-                .addOnSuccessListener {
-                    for (doc in it) {
-                        if (doc.toObject(Establishment::class.java).id == userId) {
-                            this.userType = "establishment"
-
-
-                        }
-                    }
-                }
-
-            FirebaseFirestore.getInstance().collection("institution")
-                .get()
-                .addOnSuccessListener {
-                    for (doc in it) {
-                        if (doc.toObject(Institution::class.java).id == userId) {
-                            this.userType = "institution"
-                        }
-                    }
-                }
-
-            FirebaseFirestore.getInstance().collection("person")
-                .get()
-                .addOnSuccessListener {
-                    for (doc in it) {
-                        if (doc.toObject(Person::class.java).id == userId) {
-                            this.userType = "person"
-                        }
-                    }
-                }
-        }
     }
 }

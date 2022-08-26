@@ -16,7 +16,9 @@ import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.*
 
-class OffersListActivityAdapter(private val cardList: List<HomeCardView>) :
+class OffersListActivityAdapter(
+    private val cardList: MutableList<HomeCardView>
+) :
     RecyclerView.Adapter<OffersListActivityAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -71,7 +73,11 @@ class OffersListActivityAdapter(private val cardList: List<HomeCardView>) :
                                 "Oferta deletada com sucesso.",
                                 Toast.LENGTH_LONG
                             ).show()
-                            notifyItemRemoved(position)
+
+                            cardList.remove(currentCard)
+                            notifyDataSetChanged()
+
+                            //notifyItemRemoved(position)
                             Log.i("Test", "Card deleted !")
 
                         }
@@ -132,11 +138,9 @@ class OffersListActivityAdapter(private val cardList: List<HomeCardView>) :
             confirmButtonDialog.setOnClickListener {
 
                 updateOffer(
-                    currentCard.id!!,
+                    currentCard,
                     editTextCardDescription.editText?.text.toString(),
-                    currentCard.description!!,
-                    progressBar.progress,
-                    currentCard.progress!!,
+                    currentCard.progress,
                     holder.itemView.context
                 )
                 dialog.dismiss()
@@ -151,50 +155,36 @@ class OffersListActivityAdapter(private val cardList: List<HomeCardView>) :
     }
 
     private fun updateOffer(
-        offerId: String,
+        currentCard: HomeCardView,
         newDescription: String,
-        oldDesc: String,
         newProgress: Int,
-        oldProgress: Int,
         context: Context
     ) {
+        if (newDescription.isNotBlank() && newDescription != currentCard.description) {
 
-        var updates: HashMap<String, Any>
+            var cardChanged = HomeCardView(
+                currentCard.id,
+                currentCard.establishmentId,
+                currentCard.photoUrl,
+                newProgress,
+                currentCard.title,
+                newDescription,
+                currentCard.timestamp
+            )
 
-        if (newDescription.isNullOrBlank() || newDescription == oldDesc) {
-            updates = if (newProgress == oldProgress) {
-                hashMapOf(
-                    "progress" to oldProgress
-                )
-            } else {
-                hashMapOf(
-                    "progress" to newProgress
-                )
-            }
             FirebaseFirestore.getInstance().collection("offer")
-                .document(offerId)
-                .update(updates as Map<String, Any>).addOnSuccessListener {
-                    Toast.makeText(
-                        context,
-                        "Edição realizada com sucesso !",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-        } else {
-            updates = if (newProgress == oldProgress) {
-                hashMapOf(
-                    "description" to newDescription,
-                    "progress" to oldProgress
-                )
-            } else {
-                hashMapOf(
+                .document(currentCard.id!!)
+                .update(hashMapOf<String, Any>(
                     "description" to newDescription,
                     "progress" to newProgress
-                )
-            }
-            FirebaseFirestore.getInstance().collection("offer")
-                .document(offerId)
-                .update(updates as Map<String, Any>).addOnSuccessListener {
+                )).addOnSuccessListener {
+
+                    val index = cardList.indexOf(currentCard)
+                    Log.i("Test", "old ${currentCard.description}")
+                    cardList[index] = cardChanged
+                    Log.i("Test", "new ${cardChanged.description}")
+                    notifyDataSetChanged()
+
                     Toast.makeText(
                         context,
                         "Edição realizada com sucesso !",
