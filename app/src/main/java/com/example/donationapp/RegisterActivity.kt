@@ -222,9 +222,9 @@ class RegisterActivity : AppCompatActivity() {
             .set(establishment)
             .addOnSuccessListener {
 
-                val intent = Intent(this, TopActivity::class.java)
+                val intent = Intent(this, LoadingActivity::class.java)
 
-                UniversalCommunication.userType = "establishment"
+                //UniversalCommunication.userType = "establishment"
 
                 //Permitindo toque na tela novamente
                 window.clearFlags(
@@ -261,9 +261,9 @@ class RegisterActivity : AppCompatActivity() {
             .set(institution)
             .addOnSuccessListener {
 
-                val intent = Intent(this, TopActivity::class.java)
+                val intent = Intent(this, LoadingActivity::class.java)
 
-                UniversalCommunication.userType = "institution"
+                //UniversalCommunication.userType = "institution"
 
                 //Permitindo toque na tela novamente
                 window.clearFlags(
@@ -299,9 +299,9 @@ class RegisterActivity : AppCompatActivity() {
             .set(person)
             .addOnSuccessListener {
 
-                val intent = Intent(this, TopActivity::class.java)
+                val intent = Intent(this, LoadingActivity::class.java)
 
-                UniversalCommunication.userType = "person"
+                //UniversalCommunication.userType = "person"
 
                 //Permitindo toque na tela novamente
                 window.clearFlags(

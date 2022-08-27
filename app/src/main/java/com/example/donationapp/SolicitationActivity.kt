@@ -362,8 +362,12 @@ class SolicitationActivity : AppCompatActivity() {
                     }
                     .setPositiveButton(resources.getString(R.string.proceed)) { dialog, which ->
 
+                        deleteSolicitation(solicitation.id, solicitation.fromId)
+                        Log.i("Test", "id 1: ${solicitation.id} e id 2: ${solicitation.fromId}")
                         Toast.makeText(viewHolder.itemView.context, "DELETOU", Toast.LENGTH_LONG)
                             .show()
+                        adapter.remove(viewHolder.item)
+                        adapter.notifyDataSetChanged()
 
                     }
                     .show()

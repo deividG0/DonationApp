@@ -15,25 +15,6 @@ import kotlinx.coroutines.launch
 
 class DonationApplication : Application(), Application.ActivityLifecycleCallbacks {
 
-    private fun updateToken(userType: String, currentUserId: String) {
-
-        lateinit var token : String
-
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-
-            // Get new FCM registration token
-            token = task.result
-
-            UniversalCommunication.userToken = token
-
-            FirebaseFirestore.getInstance().collection(userType)
-                .document(currentUserId)
-                .update("token", token)
-
-        })
-
-    }
-
     private fun setOnline(enabled: Boolean) {
 
         val userId = FirebaseAuth.getInstance().uid
@@ -48,72 +29,12 @@ class DonationApplication : Application(), Application.ActivityLifecycleCallback
         }
     }
 
-    private fun setUserType(enabled: Boolean) {
-
-        val userId = FirebaseAuth.getInstance().uid
-
-        Log.i("TestInit", "userId: $userId e firstTime: ${UniversalCommunication.firstTime}")
-
-        if (userId != null) {
-
-            FirebaseFirestore.getInstance().collection("establishment")
-                .get()
-                .addOnSuccessListener {
-                    for (doc in it) {
-                        if (doc.toObject(Establishment::class.java).id == userId) {
-
-                            UniversalCommunication.userType = "establishment"
-                            updateToken("establishment", userId)
-                            setOnline(enabled)
-                            UniversalCommunication.firstTime = false
-                            Log.i("Test", "é do tipo estabelecimento")
-                            //Toast.makeText(this,"userType: establishment",Toast.LENGTH_SHORT).show()
-
-                        }
-                    }
-                }
-
-            FirebaseFirestore.getInstance().collection("institution")
-                .get()
-                .addOnSuccessListener {
-                    for (doc in it) {
-                        if (doc.toObject(Institution::class.java).id == userId) {
-
-                            UniversalCommunication.userType = "institution"
-                            updateToken("institution", userId)
-                            setOnline(enabled)
-                            UniversalCommunication.firstTime = false
-                            //Toast.makeText(this,"userType: institution",Toast.LENGTH_SHORT).show()
-
-                        }
-                    }
-                }
-
-            FirebaseFirestore.getInstance().collection("person")
-                .get()
-                .addOnSuccessListener {
-                    for (doc in it) {
-                        if (doc.toObject(Person::class.java).id == userId) {
-
-                            UniversalCommunication.userType = "person"
-                            updateToken("person", userId)
-                            setOnline(enabled)
-                            UniversalCommunication.firstTime = false
-                            //Toast.makeText(this,"userType: person",Toast.LENGTH_SHORT).show()
-
-                        }
-                    }
-                }
-        }
-    }
-
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
     }
 
     override fun onCreate() {
 
         super.onCreate()
-        this.setUserType(true)
         Log.i("TestInit", "Entrei no onCreate da Application")
 
     }
@@ -122,19 +43,11 @@ class DonationApplication : Application(), Application.ActivityLifecycleCallback
     }
 
     override fun onActivityResumed(activity: Activity) {
-        if(UniversalCommunication.firstTime){
-
-            this.setUserType(true)
-
-        }else{
-
-            this.setOnline(true)
-
-        }
+        setOnline(true)
     }
 
     override fun onActivityPaused(activity: Activity) {
-        this.setOnline(false)
+        setOnline(false)
     }
 
     override fun onActivityStopped(activity: Activity) {

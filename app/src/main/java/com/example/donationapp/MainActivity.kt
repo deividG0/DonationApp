@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity() {
                     val userId = it.result.user!!.uid
                     Log.i("Test",it.result.user!!.uid)
 
-                    val intent = Intent(this, TopActivity::class.java)
+                    val intent = Intent(this, LoadingActivity::class.java)
 
                     //Permitindo toque na tela novamente
                     window.clearFlags(
@@ -157,38 +157,7 @@ class MainActivity : AppCompatActivity() {
                     intent.flags =
                         Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
 
-                    FirebaseFirestore.getInstance().collection("establishment")
-                        .get()
-                        .addOnSuccessListener { establishments ->
-                            for (doc in establishments) {
-                                if (doc.toObject(Establishment::class.java).id == userId) {
-                                    UniversalCommunication.userType = "establishment"
-                                    startActivity(intent)
-                                }
-                            }
-                        }
-
-                    FirebaseFirestore.getInstance().collection("institution")
-                        .get()
-                        .addOnSuccessListener { institutions ->
-                            for (doc in institutions) {
-                                if (doc.toObject(Institution::class.java).id == userId) {
-                                    UniversalCommunication.userType = "institution"
-                                    startActivity(intent)
-                                }
-                            }
-                        }
-
-                    FirebaseFirestore.getInstance().collection("person")
-                        .get()
-                        .addOnSuccessListener { persons ->
-                            for (doc in persons) {
-                                if (doc.toObject(Person::class.java).id == userId) {
-                                    UniversalCommunication.userType = "person"
-                                    startActivity(intent)
-                                }
-                            }
-                        }
+                    startActivity(intent)
                 }
             }.addOnFailureListener {
 

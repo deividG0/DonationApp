@@ -46,7 +46,7 @@
             android:exported="false" />
         <activity
             android:name=".TopActivity"
-            android:exported="true">
+            android:exported="false">
         </activity>
         <activity
             android:name=".RegisterActivity"

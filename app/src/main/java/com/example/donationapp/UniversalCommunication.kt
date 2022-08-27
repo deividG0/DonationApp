@@ -1,7 +1,5 @@
 package com.example.donationapp
 
-import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.widget.ImageView
 import com.google.android.material.badge.BadgeDrawable
@@ -9,7 +7,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.delay
 import java.util.*
 
 object UniversalCommunication {

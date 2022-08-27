@@ -47,6 +47,7 @@ class OffersListActivity : AppCompatActivity() {
         val userId = FirebaseAuth.getInstance().uid
 
         FirebaseFirestore.getInstance().collection("offer")
+            .whereEqualTo("establishmentId", userId)
             .get()
             .addOnSuccessListener {
                 if (it.isEmpty) {
@@ -56,20 +57,13 @@ class OffersListActivity : AppCompatActivity() {
                     binding.progressBarOffersListActivity.visibility = View.INVISIBLE
 
                 } else {
-                    FirebaseFirestore.getInstance().collection("offer")
-                        .orderBy("timestamp", Query.Direction.DESCENDING)
-                        .get()
-                        .addOnSuccessListener {
-                            for (doc in it) {
-                                val card = doc.toObject(HomeCardView::class.java)
-                                if (card.establishmentId == userId){
-                                    listCards.add(card)
-                                }
-
-                            }
-                            binding.progressBarOffersListActivity.visibility = View.INVISIBLE
-                            binding.rvOffersListActivity.adapter!!.notifyDataSetChanged()
-                        }
+                    for (doc in it) {
+                        val card = doc.toObject(HomeCardView::class.java)
+                        listCards.add(card)
+                        listCards.sortedWith(compareBy { offer -> offer.timestamp })
+                    }
+                    binding.progressBarOffersListActivity.visibility = View.INVISIBLE
+                    binding.rvOffersListActivity.adapter!!.notifyDataSetChanged()
                 }
             }
     }
