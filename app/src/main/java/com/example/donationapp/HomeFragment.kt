@@ -1,5 +1,6 @@
 package com.example.donationapp
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -33,14 +34,14 @@ class HomeFragment : Fragment() {
         listCards = mutableListOf()
         tempListCards = mutableListOf()
 
+        verifyAssociationType()
+
         binding.progressBarHomeFragment.visibility = View.VISIBLE
 
         binding.rvHome.setHasFixedSize(true)
         binding.rvHome.layoutManager = LinearLayoutManager(context)
 
-        verifyAssociationType()
-
-        binding.floatingActionButton.hide()
+        //binding.floatingActionButton.hide()
 
         binding.floatingActionButton.setOnClickListener {
 
@@ -76,7 +77,7 @@ class HomeFragment : Fragment() {
                 return false
             }
         })
-        //something wrong here
+
         binding.offerFilter.recentOfferFilter.setOnClickListener {
             tempListCards.clear()
             tempListCards.addAll((listCards.sortedWith(compareBy { it.timestamp })).asReversed())
@@ -93,78 +94,29 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    private fun verifyAssociationType() {
+    override fun onResume() {
+        super.onResume()
 
-        val currentUserId = FirebaseAuth.getInstance().uid
-
-        FirebaseFirestore.getInstance().collection("institution")
-            .get()
-            .addOnSuccessListener {
-                if (it.isEmpty) {
-
-                    Log.i("Test", "collection institution not existed")
-                    searchAmongPerson()
-
-                } else {
-
-                    FirebaseFirestore.getInstance().collection("institution")
-                        .get()
-                        .addOnSuccessListener {
-                            for (doc in it) {
-                                if (doc.toObject(Institution::class.java).id == currentUserId) {
-
-                                    Log.i("Test", "verificação is institution")
-                                    setupToPersonAndInstitution()
-                                    return@addOnSuccessListener
-
-                                }
-                            }
-                            searchAmongPerson()
-
-                        }.addOnFailureListener {
-
-                            Log.i("Test", "Erro em verifyAssociationType")
-
-                        }
-                }
-            }
+        Log.i("Test", "Passou pelo resume da home fragment")
     }
 
-    private fun searchAmongPerson() {
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        Log.i("Test", "Passou pelo attach da home fragment")
+    }
 
-        val currentUserId = FirebaseAuth.getInstance().uid
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i("Test", "Passou pelo destroy da home fragment")
+    }
 
-        FirebaseFirestore.getInstance().collection("person")
-            .get()
-            .addOnSuccessListener {
-                if (it.isEmpty) {
-
-                    Log.i("Test", "collection person not existed")
-                    setupToEstablishment()
-
-                } else {
-
-                    FirebaseFirestore.getInstance().collection("person")
-                        .get()
-                        .addOnSuccessListener {
-                            for (doc in it) {
-                                if (doc.toObject(Person::class.java).id == currentUserId) {
-
-                                    Log.i("Test", "verificação 2")
-                                    setupToPersonAndInstitution()
-                                    return@addOnSuccessListener
-
-                                }
-                                setupToEstablishment()
-
-                            }
-                        }.addOnFailureListener {
-
-                            Log.i("Test", "Erro em searchAmongPerson")
-
-                        }
-                }
-            }
+    private fun verifyAssociationType() {
+        Log.i("Test", "UniversalCommunication.userType: ${UniversalCommunication.userType}")
+        if(UniversalCommunication.userType=="establishment"){
+            setupToEstablishment()
+        }else{
+            setupToPersonAndInstitution()
+        }
     }
 
     private fun setupToPersonAndInstitution() {
@@ -177,6 +129,7 @@ class HomeFragment : Fragment() {
     private fun setupToEstablishment() {
 
         fetchCardsToEstablishment()
+        Log.i("Test", "Setou o floating button ? ${binding.floatingActionButton.isEnabled}")
         binding.floatingActionButton.show()
 
     }
