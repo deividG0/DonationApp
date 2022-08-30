@@ -16,6 +16,7 @@
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/bg_item_agenda_rounded_white.xml" value="0.3828125" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/full_shape.xml" value="0.21927083333333333" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/ic_close.xml" value="0.134" />
+        <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/ic_delete.xml" value="0.2085" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/ic_edit.xml" value="0.21927083333333333" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/ic_filter.xml" value="0.134" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/drawable/ic_info.xml" value="0.3828125" />
@@ -29,7 +30,7 @@
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/activity_create_establishment.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/activity_create_home_card.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/activity_create_institution.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/activity_main.xml" value="0.31437598736176936" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/activity_offers_list.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/activity_profile.xml" value="0.33" />
         <entry key="..\:/Users/david/AndroidStudioProjects/DonationApp/app/src/main/res/layout/activity_register.xml" value="0.36666666666666664" />

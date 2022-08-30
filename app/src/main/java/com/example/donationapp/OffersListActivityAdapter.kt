@@ -44,6 +44,7 @@ class OffersListActivityAdapter(
         holder.itemView.findViewById<TextView>(R.id.textViewCardTitle).text = currentCard.title
         holder.itemView.findViewById<TextView>(R.id.textViewDescriptionCard).text =
             currentCard.description
+        holder.itemView.findViewById<ProgressBar>(R.id.progressBar).progress = currentCard.progress!!
 
         val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy, HH:mm:ss")
         val netDate = Date(currentCard.timestamp!!)
@@ -112,7 +113,7 @@ class OffersListActivityAdapter(
             val editTextCardDescription =
                 dialog.findViewById<TextInputLayout>(R.id.editTextCardDescription)
 
-            editTextCardDescription.hint = currentCard.description
+            editTextCardDescription.editText?.setText(currentCard.description)
             progressBar.progress = currentCard.progress!!
 
             percentageButton.text = progressBar.progress.toString()
@@ -137,10 +138,12 @@ class OffersListActivityAdapter(
 
             confirmButtonDialog.setOnClickListener {
 
+                Log.i("Test", "edit text offer edit ${editTextCardDescription.editText?.text.toString()} and ${progressBar.progress}")
+
                 updateOffer(
                     currentCard,
                     editTextCardDescription.editText?.text.toString(),
-                    currentCard.progress,
+                    progressBar.progress,
                     holder.itemView.context
                 )
                 dialog.dismiss()
@@ -160,7 +163,7 @@ class OffersListActivityAdapter(
         newProgress: Int,
         context: Context
     ) {
-        if (newDescription.isNotBlank() && newDescription != currentCard.description) {
+        if (newDescription.isNotBlank()) {
 
             var cardChanged = HomeCardView(
                 currentCard.id,
@@ -191,6 +194,12 @@ class OffersListActivityAdapter(
                         Toast.LENGTH_LONG
                     ).show()
                 }
+        }else{
+            Toast.makeText(
+                context,
+                "A descrição não pode ficar em branco.",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 

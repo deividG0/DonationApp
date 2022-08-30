@@ -184,6 +184,7 @@ class SolicitationActivity : AppCompatActivity() {
                 agenda2.title = title
                 agenda2.data = data
                 agenda2.description = description
+                agenda2.relatedCardId = relatedCardId
 
                 FirebaseFirestore.getInstance().collection("agenda")
                     .document(fromId!!)

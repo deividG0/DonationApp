@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,27 +39,9 @@ class AgendaFragment : Fragment() {
         rv.layoutManager = LinearLayoutManager(context)
         rv.adapter = adapter
 
-        rvTest()
-
-        return binding.root
-    }
-
-    private fun rvTest() {
-
-        /*val agenda = Agenda()
-
-        agenda.title = "Mercado do João"
-        agenda.description = "50 kilos de batata"
-        agenda.data = "25"
-
-        adapter.add(AgendaItem(agenda))
-        adapter.add(AgendaItem(agenda))
-        adapter.add(AgendaItem(agenda))
-        adapter.add(AgendaItem(agenda))
-        adapter.add(AgendaItem(agenda))*/
-
         fetchAgenda()
 
+        return binding.root
     }
 
     private fun fetchAgenda() {
@@ -116,36 +99,75 @@ class AgendaFragment : Fragment() {
                 viewHolder.itemView.findViewById(R.id.textViewNameAgenda)
             val description: TextView =
                 viewHolder.itemView.findViewById(R.id.textViewDescriptionAgenda)
+            val buttonDeleteAgendaItem = viewHolder.itemView.findViewById<ImageButton>(R.id.buttonDeleteAgendaItem)
+            //buttonDeleteAgendaItem.visibility = View.INVISIBLE
 
-            val date = SimpleDateFormat("dd/MM/yyyy").parse(agenda.data)
+            buttonDeleteAgendaItem.setOnClickListener {
+                deleteAgendaItem(agenda)
+                adapter.removeGroup(position)
+                adapter.notifyDataSetChanged()
+            }
+
+            val date = SimpleDateFormat("dd/MM/yyyy").parse(agenda.data!!)
 
             // Timestamp 7 days = 604800000L
 
             val today = Date() //SimpleDateFormat("dd/MM/yyyy").format(Date())
+            Log.i("Test","date from the agenda item: $date, com .time: ${date.time}")
+            Log.i("Test","today: $today, com .time: ${today.time}")
 
             val nestWeek = today.time + 604800000L
 
-            if (agenda.relatedCardId==null){
-
-                viewHolder.itemView.findViewById<View>(R.id.agendaType).setBackgroundResource(R.drawable.bg_item_agenda_rounded_green)
-
-            }else if(date.time <= nestWeek){
+            if(date.time <= nestWeek){
 
                 viewHolder.itemView.findViewById<View>(R.id.agendaType).setBackgroundResource(R.drawable.bg_item_agenda_rounded_red)
-
-            }else if(date.time < today.time){
-
-                viewHolder.itemView.findViewById<View>(R.id.agendaType).setBackgroundResource(R.drawable.bg_item_agenda_rounded_gray)
 
             }else{
 
                 viewHolder.itemView.findViewById<View>(R.id.agendaType).setBackgroundResource(R.drawable.bg_item_agenda_rounded_white)
 
             }
+            if(date.time < today.time){
 
+                Log.i("Test","ta entrando aqui ?")
+                viewHolder.itemView.findViewById<View>(R.id.agendaType).setBackgroundResource(R.drawable.bg_item_agenda_rounded_gray)
+                buttonDeleteAgendaItem.visibility = View.VISIBLE
+
+            }
+            if (agenda.relatedCardId==null){
+
+                viewHolder.itemView.findViewById<View>(R.id.agendaType).setBackgroundResource(R.drawable.bg_item_agenda_rounded_green)
+
+            }
+
+            buttonDeleteAgendaItem.visibility = View.INVISIBLE
             data.text = agenda.data
             establishmentName.text = agenda.title
             description.text = agenda.description
+
+        }
+
+        fun deleteAgendaItem(agenda: Agenda){
+
+            val userId = FirebaseAuth.getInstance().uid
+
+            FirebaseFirestore.getInstance().collection("agenda")
+                .document(userId!!)
+                .collection("dates")
+                .get()
+                .addOnSuccessListener {
+                    for(doc in it){
+                        if (doc["relatedCardId"] == agenda.relatedCardId){
+                            FirebaseFirestore.getInstance().collection("agenda")
+                                .document(userId!!)
+                                .collection("dates")
+                                .document(doc.id)
+                                .delete()
+                            Log.i("Test", "Agenda Item Card Deleted")
+                            return@addOnSuccessListener
+                        }
+                    }
+                }
 
         }
 
