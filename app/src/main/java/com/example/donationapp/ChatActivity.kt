@@ -1,11 +1,16 @@
 package com.example.donationapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
@@ -22,12 +27,14 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var establishmentUrlPhoto : String
     private lateinit var establishmentUsername: String
     private lateinit var editTextChat : EditText
+    private lateinit var loadingDialog : LoadingDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
         adapter = GroupAdapter()
+        loadingDialog = LoadingDialog(this)
 
         val rv : RecyclerView = findViewById(R.id.recyclerViewChat)
         val buttonChat = findViewById<Button>(R.id.buttonChat)
@@ -41,8 +48,6 @@ class ChatActivity : AppCompatActivity() {
         supportActionBar?.title = establishmentUsername
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        Log.i("Test", "{$toIdEstablishment}")
-
         rv.adapter = adapter
         rv.layoutManager = LinearLayoutManager(this)
 
@@ -53,6 +58,74 @@ class ChatActivity : AppCompatActivity() {
             sendMessage()
 
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+        menuInflater.inflate(R.menu.top_menu_chat, menu)
+        return true
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+
+            R.id.buttonDeleteMessages -> deleteAllMessages()
+
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun deleteAllMessages() {
+
+        val currentUserId = FirebaseAuth.getInstance().uid
+
+        MaterialAlertDialogBuilder(this,
+            R.style.ThemeOverlay_MaterialComponents_MaterialAlertDialog_FullWidthButtons)
+            .setMessage(resources.getString(R.string.confirmDeleteAllMessages))
+            .setNeutralButton(resources.getString(R.string.cancel)) { dialog, which ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(resources.getString(R.string.confirm)){ dialog, which ->
+
+                loadingDialog.startLoadingDialog()
+
+                FirebaseFirestore.getInstance().collection("conversation")
+                    .document(currentUserId!!)
+                    .collection(toIdEstablishment)
+                    .get()
+                    .addOnSuccessListener {
+                        for (doc in it){
+                            FirebaseFirestore.getInstance().collection("conversation")
+                                .document(currentUserId!!)
+                                .collection(toIdEstablishment)
+                                .document(doc.id)
+                                .delete()
+                        }
+                        deleteTheLastMessage(currentUserId,toIdEstablishment)
+                        loadingDialog.dismissDialog()
+                        adapter.clear()
+                        Log.i("Test","Deleting all messages ...")
+                    }
+
+            }
+            .show()
+
+    }
+
+    private fun deleteTheLastMessage(currentUserId: String, toIdEstablishment: String) {
+
+       FirebaseFirestore.getInstance().collection("last-messages")
+           .document(currentUserId!!)
+           .collection("contacts")
+           .document(toIdEstablishment)
+           .delete()
+           .addOnSuccessListener {
+               val intent = Intent(this,TopActivity::class.java)
+               intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+               startActivity(intent)
+           }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -156,22 +229,15 @@ class ChatActivity : AppCompatActivity() {
             .orderBy("timestamp", Query.Direction.ASCENDING)
             .addSnapshotListener { value, error ->
 
-                Log.i("Test","Listener adicionado")
-
                 val documentChanges : List<DocumentChange> = value?.documentChanges as List<DocumentChange>
 
                 if (documentChanges != null){
 
-                    Log.i("Test","Entrou aqui 1")
-
                     for (doc in documentChanges){
-
-                        Log.i("Test","Entrou aqui 2")
 
                         if(doc.type == DocumentChange.Type.ADDED){
 
                             val message : Message = doc.document.toObject(Message::class.java)
-                            Log.i("Test","Entrou aqui 3, texto: ${message.text}")
                             adapter.add(MessageItem(message))
 
                         }

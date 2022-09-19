@@ -12,6 +12,7 @@
     <string name="profile">Perfil</string>
     <string name="logout">Sair</string>
     <string name="errorLoginMessage">Erro ao tentar fazer log-in, verifique seu email e senha.</string>
+    <string name="confirmDeleteAllMessages">Tem certeza que deseja deletar todas as mensagens ? Essa ação fará com que este contato não apareça na sua tela de conversas.</string>
     <string name="confirmDeleteOffer">Tem certeza que deseja deletar essa oferta ?</string>
     <string name="tryAgain">Tentar novamente</string>
     <string name="institution">Instituição</string>
@@ -89,4 +90,5 @@
     <string name="updateOffer">Edite a oferta</string>
     <string name="enterNewCardDescription">Digite a nova descrição da sua oferta</string>
     <string name="progress">Progresso</string>
+    <string name="deleteAllMessages">Apagar todas mensagens</string>
 </resources>
